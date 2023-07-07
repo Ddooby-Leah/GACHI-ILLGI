@@ -72,3 +72,11 @@ tasks.named('asciidoctor') {
     inputs.dir snippetsDir
     dependsOn test
 }
+
+tasks.register('copyProperties', Copy) {
+    copy {
+        from "./config"
+        include "*.yml"
+        into "src/main/resources"
+    }
+}
