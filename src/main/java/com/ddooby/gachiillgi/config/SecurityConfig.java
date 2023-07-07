@@ -4,6 +4,7 @@ import com.ddooby.gachiillgi.base.jwt.JwtAccessDeniedHandler;
 import com.ddooby.gachiillgi.base.jwt.JwtAuthenticationEntryPoint;
 import com.ddooby.gachiillgi.base.jwt.JwtSecurityConfig;
 import com.ddooby.gachiillgi.base.jwt.TokenProvider;
+import com.ddooby.gachiillgi.base.enums.PermitPathEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -11,7 +12,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -54,14 +54,7 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .antMatchers(
-                                "/api-docs/**",
-                                "/swagger-ui/**",
-                                "/actuator/**",
-                                "/favicon.ico",
-                                "/api/hello",
-                                "/api/authenticate",
-                                "/api/signup")
+                        .requestMatchers(PermitPathEnum.getPermitUriList())
                         .permitAll()
                         .requestMatchers(PathRequest.toH2Console())
                         .permitAll()
