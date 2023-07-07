@@ -1,8 +1,10 @@
 package com.ddooby.gachiillgi.controller;
 
 import com.ddooby.gachiillgi.base.jwt.TokenProvider;
-import com.ddooby.gachiillgi.dto.LoginDTO;
+import com.ddooby.gachiillgi.dto.LoginRequestDTO;
 import com.ddooby.gachiillgi.dto.TokenDTO;
+import com.ddooby.gachiillgi.dto.UserDTO;
+import com.ddooby.gachiillgi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,21 +26,28 @@ import javax.validation.Valid;
 import static com.ddooby.gachiillgi.base.enums.TokenEnum.TOKEN_COOKIE_HEADER;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @Slf4j
 public class AuthController {
 
     @Value("${jwt.token-validity-in-seconds}")
     private String tokenExpireTime;
+
+    private final UserService userService;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    @PostMapping("/authenticate")
-    public ResponseEntity<TokenDTO> authorize(@Valid @RequestBody LoginDTO loginDto) {
+    @PostMapping("/signup")
+    public UserDTO signup(@Valid @RequestBody UserDTO userDto) {
+        return userService.signup(userDto);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<TokenDTO> authorize(@Valid @RequestBody LoginRequestDTO loginRequestDto) {
 
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
+                new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword());
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -48,7 +57,7 @@ public class AuthController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(
                 HttpHeaders.SET_COOKIE,
-                ResponseCookie.from(TOKEN_COOKIE_HEADER.name(), token)
+                ResponseCookie.from(TOKEN_COOKIE_HEADER.getName(), token)
                         .maxAge(Long.parseLong(tokenExpireTime))
                         .secure(true)
                         .httpOnly(true)

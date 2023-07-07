@@ -1,10 +1,10 @@
 package com.ddooby.gachiillgi.config;
 
+import com.ddooby.gachiillgi.base.enums.PermitPathEnum;
 import com.ddooby.gachiillgi.base.jwt.JwtAccessDeniedHandler;
 import com.ddooby.gachiillgi.base.jwt.JwtAuthenticationEntryPoint;
-import com.ddooby.gachiillgi.base.jwt.JwtSecurityConfig;
+import com.ddooby.gachiillgi.base.jwt.JwtFilter;
 import com.ddooby.gachiillgi.base.jwt.TokenProvider;
-import com.ddooby.gachiillgi.base.enums.PermitPathEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -43,8 +43,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-
+        return http
                 .csrf(AbstractHttpConfigurer::disable)
 
                 .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
@@ -71,7 +70,7 @@ public class SecurityConfig {
                         headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
                 )
 
-                .apply(new JwtSecurityConfig(tokenProvider));
-        return http.build();
+                .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 }

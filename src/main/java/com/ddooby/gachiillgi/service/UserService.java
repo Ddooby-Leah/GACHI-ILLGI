@@ -1,7 +1,8 @@
 package com.ddooby.gachiillgi.service;
 
+import com.ddooby.gachiillgi.base.enums.exception.UserErrorCodeEnum;
 import com.ddooby.gachiillgi.base.exception.DuplicateMemberException;
-import com.ddooby.gachiillgi.base.exception.NotFoundMemberException;
+import com.ddooby.gachiillgi.base.handler.BizException;
 import com.ddooby.gachiillgi.base.util.SecurityUtil;
 import com.ddooby.gachiillgi.dto.UserDTO;
 import com.ddooby.gachiillgi.entity.Authority;
@@ -13,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.util.Collections;
 
@@ -48,8 +48,6 @@ public class UserService {
                         .build())
         );
 
-        user.getUserAuthoritySet().forEach(x -> log.debug(x.toString()));
-
         return UserDTO.from(userRepository.save(user));
     }
 
@@ -63,7 +61,7 @@ public class UserService {
         return UserDTO.from(
                 SecurityUtil.getCurrentUsername()
                         .flatMap(userRepository::findOneWithUserAuthorityByUsername)
-                        .orElseThrow(() -> new NotFoundMemberException("Member not found"))
+                        .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND))
         );
     }
 }

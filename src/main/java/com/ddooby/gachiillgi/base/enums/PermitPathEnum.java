@@ -15,9 +15,10 @@ public enum PermitPathEnum {
     SWAGGER_UI_URI("/swagger-ui/**"),
     ACTUATOR_URI("/actuator/**"),
     FAVICON_URI("/favicon.ico"),
-    HELLO_URI("/api/hello"),
-    AUTHENTICATE_URI("/api/authenticate"),
-    SIGNUP_URI("/api/signup");
+    HELLO_URI("/api/user/hello"),
+    REDIRECT_URI("/api/user/test-redirect"),
+    AUTHENTICATE_URI("/api/auth/login"),
+    SIGNUP_URI("/api/auth/signup");
 
     private final String uri;
 

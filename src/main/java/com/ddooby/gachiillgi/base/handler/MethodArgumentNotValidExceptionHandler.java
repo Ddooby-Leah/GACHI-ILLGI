@@ -1,6 +1,6 @@
 package com.ddooby.gachiillgi.base.handler;
 
-import com.ddooby.gachiillgi.dto.ErrorDTO;
+import com.ddooby.gachiillgi.dto.ErrorResponseDTO;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.validation.BindingResult;
@@ -22,17 +22,17 @@ public class MethodArgumentNotValidExceptionHandler {
     @ResponseStatus(BAD_REQUEST)
     @ResponseBody
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ErrorDTO methodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    public ErrorResponseDTO methodArgumentNotValidException(MethodArgumentNotValidException ex) {
         BindingResult result = ex.getBindingResult();
         List<FieldError> fieldErrors = result.getFieldErrors();
         return processFieldErrors(fieldErrors);
     }
 
-    private ErrorDTO processFieldErrors(List<org.springframework.validation.FieldError> fieldErrors) {
-        ErrorDTO errorDTO = new ErrorDTO(BAD_REQUEST.value(), "@Valid Error");
-        for (org.springframework.validation.FieldError fieldError: fieldErrors) {
-            errorDTO.addFieldError(fieldError.getObjectName(), fieldError.getField(), fieldError.getDefaultMessage());
+    private ErrorResponseDTO processFieldErrors(List<FieldError> fieldErrors) {
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(BAD_REQUEST.value(), "@Valid Error");
+        for (FieldError fieldError: fieldErrors) {
+            errorResponseDTO.addFieldError(fieldError.getObjectName(), fieldError.getField(), fieldError.getDefaultMessage());
         }
-        return errorDTO;
+        return errorResponseDTO;
     }
 }

@@ -1,17 +1,15 @@
 package com.ddooby.gachiillgi.base.handler;
 
+import com.ddooby.gachiillgi.dto.DefaultErrorResponseDTO;
+import com.ddooby.gachiillgi.dto.DefaultResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @RestControllerAdvice
@@ -22,6 +20,7 @@ public class DefaultResponseHandler implements ResponseBodyAdvice<Object> {
         return true;
     }
 
+
     @Override
     public Object beforeBodyWrite(Object body,
                                   MethodParameter returnType,
@@ -31,14 +30,12 @@ public class DefaultResponseHandler implements ResponseBodyAdvice<Object> {
                                   ServerHttpResponse response) {
 
         if (selectedContentType.isCompatibleWith(MediaType.APPLICATION_JSON)) {
-            Map<String, Object> responseData = new HashMap<>();
-            responseData.put("code", 1);
-            responseData.put("longMessage", "success");
-            responseData.put("shortMessage", "success");
-            responseData.put("contents", body);
-            return responseData;
+            if (body instanceof DefaultErrorResponseDTO) {
+                return body;
+            } else{
+                return DefaultResponseDTO.builder().contents(body).build();
+            }
         }
-
         return body;
     }
 }
