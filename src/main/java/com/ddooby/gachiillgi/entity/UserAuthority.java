@@ -1,6 +1,5 @@
 package com.ddooby.gachiillgi.entity;
 
-import com.ddooby.gachiillgi.base.entity.BaseInsertEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,8 +14,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "member_authority")
-public class MemberAuthority
+@Table(name = "user_authority")
+public class UserAuthority
 //        extends BaseInsertEntity
 {
 
@@ -25,8 +24,8 @@ public class MemberAuthority
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "authority_name")

@@ -1,9 +1,8 @@
 package com.ddooby.gachiillgi.controller;
 
-import com.ddooby.gachiillgi.dto.MemberDTO;
-import com.ddooby.gachiillgi.service.MemberService;
+import com.ddooby.gachiillgi.dto.UserDTO;
+import com.ddooby.gachiillgi.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +15,8 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class MemberController {
-    private final MemberService memberService;
+public class UserController {
+    private final UserService userService;
 
     @GetMapping("/hello")
     public ResponseEntity<String> hello() {
@@ -30,19 +29,19 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<MemberDTO> signup(@Valid @RequestBody MemberDTO memberDto) {
-        return ResponseEntity.ok(memberService.signup(memberDto));
+    public ResponseEntity<UserDTO> signup(@Valid @RequestBody UserDTO userDto) {
+        return ResponseEntity.ok(userService.signup(userDto));
     }
 
     @GetMapping("/user")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<MemberDTO> getMyUserInfo(HttpServletRequest request) {
-        return ResponseEntity.ok(memberService.getMyUserWithAuthorities());
+    public ResponseEntity<UserDTO> getMyUserInfo(HttpServletRequest request) {
+        return ResponseEntity.ok(userService.getMyUserWithAuthorities());
     }
 
     @GetMapping("/user/{username}")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<MemberDTO> getUserInfo(@PathVariable String username) {
-        return ResponseEntity.ok(memberService.getUserWithAuthorities(username));
+    public ResponseEntity<UserDTO> getUserInfo(@PathVariable String username) {
+        return ResponseEntity.ok(userService.getUserWithAuthorities(username));
     }
 }

@@ -4,12 +4,14 @@ import com.ddooby.gachiillgi.base.jwt.JwtAccessDeniedHandler;
 import com.ddooby.gachiillgi.base.jwt.JwtAuthenticationEntryPoint;
 import com.ddooby.gachiillgi.base.jwt.JwtSecurityConfig;
 import com.ddooby.gachiillgi.base.jwt.TokenProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -22,28 +24,22 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 @EnableWebSecurity // 시큐리티 활성화 -> 기본 스프링 필터체인에 등록
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
     private final TokenProvider tokenProvider;
     private final CorsFilter corsFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
-    public SecurityConfig(
-            TokenProvider tokenProvider,
-            CorsFilter corsFilter,
-            JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
-            JwtAccessDeniedHandler jwtAccessDeniedHandler
-    ) {
-        this.tokenProvider = tokenProvider;
-        this.corsFilter = corsFilter;
-        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
-        this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
-    }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+//    @Bean
+//    WebSecurityCustomizer webSecurityCustomizer() {
+//        return (web) -> web.ignoring().antMatchers("/favicon.ico", "/actuator/**");
+//    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -58,8 +54,17 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .antMatchers("/api/hello", "/api/authenticate", "/api/signup").permitAll()
-                        .requestMatchers(PathRequest.toH2Console()).permitAll()
+                        .antMatchers(
+                                "/api-docs/**",
+                                "/swagger-ui/**",
+                                "/actuator/**",
+                                "/favicon.ico",
+                                "/api/hello",
+                                "/api/authenticate",
+                                "/api/signup")
+                        .permitAll()
+                        .requestMatchers(PathRequest.toH2Console())
+                        .permitAll()
                         .anyRequest().authenticated()
                 )
 

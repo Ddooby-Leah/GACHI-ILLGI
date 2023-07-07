@@ -5,6 +5,7 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -16,8 +17,8 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "member")
-public class Member
+@Table(name = "users")
+public class User
 //        extends BaseUpdateEntity
 {
 
@@ -38,12 +39,12 @@ public class Member
     @Column(name = "activated")
     private boolean activated;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MemberAuthority> memberAuthoritySet = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserAuthority> userAuthoritySet = new HashSet<>();
 
-    public void updateAuthority(MemberAuthority memberAuthority) {
+    public void updateAuthority(UserAuthority userAuthority) {
         //TODO 삭제 기능
-        memberAuthoritySet.add(memberAuthority);
-        memberAuthority.setMember(this);
+        userAuthoritySet.add(userAuthority);
+        userAuthority.setUser(this);
     }
 }

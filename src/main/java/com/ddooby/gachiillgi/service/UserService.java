@@ -3,11 +3,11 @@ package com.ddooby.gachiillgi.service;
 import com.ddooby.gachiillgi.base.exception.DuplicateMemberException;
 import com.ddooby.gachiillgi.base.exception.NotFoundMemberException;
 import com.ddooby.gachiillgi.base.util.SecurityUtil;
-import com.ddooby.gachiillgi.dto.MemberDTO;
+import com.ddooby.gachiillgi.dto.UserDTO;
 import com.ddooby.gachiillgi.entity.Authority;
-import com.ddooby.gachiillgi.entity.Member;
-import com.ddooby.gachiillgi.entity.MemberAuthority;
-import com.ddooby.gachiillgi.repository.MemberRepository;
+import com.ddooby.gachiillgi.entity.User;
+import com.ddooby.gachiillgi.entity.UserAuthority;
+import com.ddooby.gachiillgi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,13 +20,13 @@ import java.util.Collections;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MemberService {
-    private final MemberRepository memberRepository;
+public class UserService {
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public MemberDTO signup(MemberDTO memberDto) {
-        if (memberRepository.findOneWithMemberAuthorityByUsername(memberDto.getUsername()).orElse(null) != null) {
+    public UserDTO signup(UserDTO userDto) {
+        if (userRepository.findOneWithUserAuthorityByUsername(userDto.getUsername()).orElse(null) != null) {
             throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
         }
 
@@ -34,35 +34,35 @@ public class MemberService {
                 .authorityName("ROLE_USER")
                 .build();
 
-        Member member = Member.builder()
-                .username(memberDto.getUsername())
-                .password(passwordEncoder.encode(memberDto.getPassword()))
-                .nickname(memberDto.getNickname())
+        User user = User.builder()
+                .username(userDto.getUsername())
+                .password(passwordEncoder.encode(userDto.getPassword()))
+                .nickname(userDto.getNickname())
                 .activated(true)
                 .build();
 
-        member.setMemberAuthoritySet(
-                Collections.singletonList(MemberAuthority.builder()
-                        .member(member)
+        user.setUserAuthoritySet(
+                Collections.singleton(UserAuthority.builder()
+                        .user(user)
                         .authority(authority)
                         .build())
         );
 
-        member.getMemberAuthoritySet().forEach(x -> log.debug(x.toString()));
+        user.getUserAuthoritySet().forEach(x -> log.debug(x.toString()));
 
-        return MemberDTO.from(memberRepository.save(member));
+        return UserDTO.from(userRepository.save(user));
     }
 
     @Transactional(readOnly = true)
-    public MemberDTO getUserWithAuthorities(String username) {
-        return MemberDTO.from(memberRepository.findOneWithMemberAuthorityByUsername(username).orElse(null));
+    public UserDTO getUserWithAuthorities(String username) {
+        return UserDTO.from(userRepository.findOneWithUserAuthorityByUsername(username).orElse(null));
     }
 
     @Transactional(readOnly = true)
-    public MemberDTO getMyUserWithAuthorities() {
-        return MemberDTO.from(
+    public UserDTO getMyUserWithAuthorities() {
+        return UserDTO.from(
                 SecurityUtil.getCurrentUsername()
-                        .flatMap(memberRepository::findOneWithMemberAuthorityByUsername)
+                        .flatMap(userRepository::findOneWithUserAuthorityByUsername)
                         .orElseThrow(() -> new NotFoundMemberException("Member not found"))
         );
     }
