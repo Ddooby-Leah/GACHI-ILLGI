@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# config file
+!**/src/main/resource/application.yml
