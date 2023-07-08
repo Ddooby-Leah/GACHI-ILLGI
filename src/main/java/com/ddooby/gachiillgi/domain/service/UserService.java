@@ -1,14 +1,14 @@
-package com.ddooby.gachiillgi.service;
+package com.ddooby.gachiillgi.domain.service;
 
 import com.ddooby.gachiillgi.base.enums.exception.UserErrorCodeEnum;
 import com.ddooby.gachiillgi.base.exception.DuplicateMemberException;
 import com.ddooby.gachiillgi.base.handler.BizException;
 import com.ddooby.gachiillgi.base.util.SecurityUtil;
-import com.ddooby.gachiillgi.dto.UserDTO;
-import com.ddooby.gachiillgi.entity.Authority;
-import com.ddooby.gachiillgi.entity.User;
-import com.ddooby.gachiillgi.entity.UserAuthority;
-import com.ddooby.gachiillgi.repository.UserRepository;
+import com.ddooby.gachiillgi.interfaces.dto.UserDTO;
+import com.ddooby.gachiillgi.domain.entity.Authority;
+import com.ddooby.gachiillgi.domain.entity.User;
+import com.ddooby.gachiillgi.domain.entity.UserAuthority;
+import com.ddooby.gachiillgi.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;

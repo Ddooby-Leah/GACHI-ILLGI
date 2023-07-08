@@ -1,4 +1,4 @@
-package com.ddooby.gachiillgi.dto;
+package com.ddooby.gachiillgi.interfaces.dto;
 
 import lombok.Builder;
 import lombok.Getter;

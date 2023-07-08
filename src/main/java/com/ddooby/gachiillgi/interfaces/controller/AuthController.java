@@ -1,10 +1,10 @@
-package com.ddooby.gachiillgi.controller;
+package com.ddooby.gachiillgi.interfaces.controller;
 
 import com.ddooby.gachiillgi.base.jwt.TokenProvider;
-import com.ddooby.gachiillgi.dto.LoginRequestDTO;
-import com.ddooby.gachiillgi.dto.TokenDTO;
-import com.ddooby.gachiillgi.dto.UserDTO;
-import com.ddooby.gachiillgi.service.UserService;
+import com.ddooby.gachiillgi.interfaces.dto.LoginRequestDTO;
+import com.ddooby.gachiillgi.interfaces.dto.TokenDTO;
+import com.ddooby.gachiillgi.interfaces.dto.UserDTO;
+import com.ddooby.gachiillgi.domain.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

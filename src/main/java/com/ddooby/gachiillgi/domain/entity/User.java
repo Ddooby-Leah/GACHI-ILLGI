@@ -1,12 +1,10 @@
-package com.ddooby.gachiillgi.entity;
+package com.ddooby.gachiillgi.domain.entity;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 

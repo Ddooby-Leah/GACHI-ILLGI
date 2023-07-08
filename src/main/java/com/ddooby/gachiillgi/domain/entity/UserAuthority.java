@@ -1,4 +1,4 @@
-package com.ddooby.gachiillgi.entity;
+package com.ddooby.gachiillgi.domain.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

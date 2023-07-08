@@ -1,7 +1,7 @@
-package com.ddooby.gachiillgi.service;
+package com.ddooby.gachiillgi.domain.service;
 
-import com.ddooby.gachiillgi.entity.User;
-import com.ddooby.gachiillgi.repository.UserRepository;
+import com.ddooby.gachiillgi.domain.entity.User;
+import com.ddooby.gachiillgi.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;

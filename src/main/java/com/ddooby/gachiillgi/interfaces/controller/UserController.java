@@ -1,13 +1,12 @@
-package com.ddooby.gachiillgi.controller;
+package com.ddooby.gachiillgi.interfaces.controller;
 
-import com.ddooby.gachiillgi.dto.UserDTO;
-import com.ddooby.gachiillgi.service.UserService;
+import com.ddooby.gachiillgi.interfaces.dto.UserDTO;
+import com.ddooby.gachiillgi.domain.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 

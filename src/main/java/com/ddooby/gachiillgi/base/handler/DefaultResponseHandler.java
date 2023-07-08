@@ -1,7 +1,7 @@
 package com.ddooby.gachiillgi.base.handler;
 
-import com.ddooby.gachiillgi.dto.DefaultErrorResponseDTO;
-import com.ddooby.gachiillgi.dto.DefaultResponseDTO;
+import com.ddooby.gachiillgi.interfaces.dto.DefaultErrorResponseDTO;
+import com.ddooby.gachiillgi.interfaces.dto.DefaultResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;

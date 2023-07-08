@@ -2,7 +2,7 @@ package com.ddooby.gachiillgi.base.jwt;
 
 import com.ddooby.gachiillgi.base.enums.PermitPathEnum;
 import com.ddooby.gachiillgi.base.exception.InvalidTokenException;
-import com.ddooby.gachiillgi.dto.ErrorResponseDTO;
+import com.ddooby.gachiillgi.interfaces.dto.ErrorResponseDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;

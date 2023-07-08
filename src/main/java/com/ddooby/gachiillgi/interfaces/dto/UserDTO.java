@@ -1,6 +1,6 @@
-package com.ddooby.gachiillgi.dto;
+package com.ddooby.gachiillgi.interfaces.dto;
 
-import com.ddooby.gachiillgi.entity.User;
+import com.ddooby.gachiillgi.domain.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

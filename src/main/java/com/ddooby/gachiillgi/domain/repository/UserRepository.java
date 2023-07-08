@@ -1,6 +1,6 @@
-package com.ddooby.gachiillgi.repository;
+package com.ddooby.gachiillgi.domain.repository;
 
-import com.ddooby.gachiillgi.entity.User;
+import com.ddooby.gachiillgi.domain.entity.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
