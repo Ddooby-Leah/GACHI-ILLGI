@@ -1,7 +1,9 @@
 package com.ddooby.gachiillgi.interfaces.controller;
 
 import com.ddooby.gachiillgi.base.jwt.TokenProvider;
+import com.ddooby.gachiillgi.domain.service.MailService;
 import com.ddooby.gachiillgi.interfaces.dto.LoginRequestDTO;
+import com.ddooby.gachiillgi.interfaces.dto.MailSendDTO;
 import com.ddooby.gachiillgi.interfaces.dto.TokenDTO;
 import com.ddooby.gachiillgi.interfaces.dto.UserDTO;
 import com.ddooby.gachiillgi.domain.service.UserService;
@@ -23,6 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.ddooby.gachiillgi.base.enums.TokenEnum.TOKEN_COOKIE_HEADER;
 
 @RestController
@@ -35,12 +40,24 @@ public class AuthController {
     private String tokenExpireTime;
 
     private final UserService userService;
+    private final MailService mailService;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @PostMapping("/signup")
     public UserDTO signup(@Valid @RequestBody UserDTO userDto) {
         return userService.signup(userDto);
+    }
+
+    @PostMapping("/mail")
+    public void sendVerificationMail(@RequestBody MailSendDTO mailSendDTO) {
+        log.debug(mailSendDTO.toString());
+        String subject = "[가치일기] 안녕하세요, " + mailSendDTO.getUsername() + "님! 메일인증";
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("username", mailSendDTO.getUsername());
+        variables.put("data", "여기를 눌러주세요");
+        variables.put("location", "https://google.com");
+        mailService.send(subject, variables, mailSendDTO.getEmail());
     }
 
     @PostMapping("/login")

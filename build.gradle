@@ -37,6 +37,11 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+    // MAIL
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'com.amazonaws:aws-java-sdk-ses:1.12.408'
+
+
     // SWAGGER
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.7.0'
 

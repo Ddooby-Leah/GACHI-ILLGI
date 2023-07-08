@@ -18,7 +18,8 @@ public enum PermitPathEnum {
     HELLO_URI("/api/user/hello"),
     REDIRECT_URI("/api/user/test-redirect"),
     AUTHENTICATE_URI("/api/auth/login"),
-    SIGNUP_URI("/api/auth/signup");
+    SIGNUP_URI("/api/auth/signup"),
+    MAIL_URI("/api/auth/mail");
 
     private final String uri;
 
