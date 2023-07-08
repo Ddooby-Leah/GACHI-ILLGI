@@ -52,9 +52,9 @@ public class AuthController {
     @PostMapping("/mail")
     public void sendVerificationMail(@RequestBody MailSendDTO mailSendDTO) {
         log.debug(mailSendDTO.toString());
-        String subject = "[가치일기] 안녕하세요, " + mailSendDTO.getUsername() + "님! 메일인증";
+        String subject = "[가치일기] 안녕하세요, " + mailSendDTO.getUsername() + "님! 메일인증을 완료해주세요.";
         Map<String, Object> variables = new HashMap<>();
-        variables.put("username", mailSendDTO.getUsername());
+        variables.put("username", mailSendDTO.getUsername() + "님 환영합니다!");
         variables.put("data", "여기를 눌러주세요");
         variables.put("location", "https://google.com");
         mailService.send(subject, variables, mailSendDTO.getEmail());
