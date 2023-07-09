@@ -1,12 +1,9 @@
 package com.ddooby.gachiillgi.base.handler;
 
 import com.ddooby.gachiillgi.base.enums.exception.ErrorCodeEnum;
-import com.ddooby.gachiillgi.base.exception.DuplicateMemberException;
-import com.ddooby.gachiillgi.base.exception.NotFoundMemberException;
+import com.ddooby.gachiillgi.base.exception.BizException;
 import com.ddooby.gachiillgi.interfaces.dto.DefaultErrorResponseDTO;
-import com.ddooby.gachiillgi.interfaces.dto.ErrorResponseDTO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -14,7 +11,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.Map;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.OK;
 
 @Slf4j
 @RestControllerAdvice
@@ -58,18 +55,6 @@ public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler
             errorShortMessage = "system error";
             return DefaultErrorResponseDTO.systemError(errorLongMessage, errorShortMessage);
         }
-    }
-
-    @ResponseStatus(CONFLICT)
-    @ExceptionHandler(value = { DuplicateMemberException.class })
-    protected ErrorResponseDTO conflict(RuntimeException ex) {
-        return new ErrorResponseDTO(CONFLICT.value(), ex.getMessage());
-    }
-
-    @ResponseStatus(FORBIDDEN)
-    @ExceptionHandler(value = { NotFoundMemberException.class, AccessDeniedException.class })
-    protected ErrorResponseDTO forbidden(RuntimeException ex) {
-        return new ErrorResponseDTO(FORBIDDEN.value(), ex.getMessage());
     }
 
     private boolean hasErrorArgument(BizException bizException) {

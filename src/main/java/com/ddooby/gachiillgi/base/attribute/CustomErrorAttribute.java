@@ -1,6 +1,6 @@
 package com.ddooby.gachiillgi.base.attribute;
 
-import com.ddooby.gachiillgi.base.handler.BizException;
+import com.ddooby.gachiillgi.base.exception.BizException;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.stereotype.Component;

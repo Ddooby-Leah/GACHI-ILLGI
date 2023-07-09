@@ -1,67 +1,16 @@
 package com.ddooby.gachiillgi.domain.service;
 
-import com.ddooby.gachiillgi.base.enums.exception.UserErrorCodeEnum;
-import com.ddooby.gachiillgi.base.exception.DuplicateMemberException;
-import com.ddooby.gachiillgi.base.handler.BizException;
-import com.ddooby.gachiillgi.base.util.SecurityUtil;
 import com.ddooby.gachiillgi.interfaces.dto.UserDTO;
-import com.ddooby.gachiillgi.domain.entity.Authority;
-import com.ddooby.gachiillgi.domain.entity.User;
-import com.ddooby.gachiillgi.domain.entity.UserAuthority;
-import com.ddooby.gachiillgi.domain.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-
-@Slf4j
-@Service
-@RequiredArgsConstructor
-public class UserService {
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+public interface UserService {
 
     @Transactional
-    public UserDTO signup(UserDTO userDto) {
-        if (userRepository.findOneWithUserAuthorityByUsername(userDto.getUsername()).orElse(null) != null) {
-            throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
-        }
-
-        Authority authority = Authority.builder()
-                .authorityName("ROLE_USER")
-                .build();
-
-        User user = User.builder()
-                .username(userDto.getUsername())
-                .password(passwordEncoder.encode(userDto.getPassword()))
-                .nickname(userDto.getNickname())
-                .activated(true)
-                .build();
-
-        user.setUserAuthoritySet(
-                Collections.singleton(UserAuthority.builder()
-                        .user(user)
-                        .authority(authority)
-                        .build())
-        );
-
-        return UserDTO.from(userRepository.save(user));
-    }
+    UserDTO signup(UserDTO userDto);
 
     @Transactional(readOnly = true)
-    public UserDTO getUserWithAuthorities(String username) {
-        return UserDTO.from(userRepository.findOneWithUserAuthorityByUsername(username).orElse(null));
-    }
+    UserDTO getUserWithAuthorities(String username);
 
     @Transactional(readOnly = true)
-    public UserDTO getMyUserWithAuthorities() {
-        return UserDTO.from(
-                SecurityUtil.getCurrentUsername()
-                        .flatMap(userRepository::findOneWithUserAuthorityByUsername)
-                        .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND))
-        );
-    }
+    UserDTO getMyUserWithAuthorities();
 }

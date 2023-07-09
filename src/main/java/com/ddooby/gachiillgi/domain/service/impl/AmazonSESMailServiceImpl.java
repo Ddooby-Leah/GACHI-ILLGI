@@ -1,7 +1,8 @@
-package com.ddooby.gachiillgi.domain.service;
+package com.ddooby.gachiillgi.domain.service.impl;
 
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.model.*;
+import com.ddooby.gachiillgi.domain.service.MailService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
@@ -11,14 +12,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @Service
-public class AmazonSMTPService implements MailService{
+public class AmazonSESMailServiceImpl implements MailService {
     private final AmazonSimpleEmailService amazonSimpleEmailService;
 
     private final TemplateEngine htmlTemplateEngine;
 
     private final String from;
 
-    public AmazonSMTPService(
+    public AmazonSESMailServiceImpl(
             AmazonSimpleEmailService amazonSimpleEmailService,
             TemplateEngine htmlTemplateEngine,
             @Value("${aws.ses.from}") String from

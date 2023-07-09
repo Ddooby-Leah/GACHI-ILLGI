@@ -1,5 +1,6 @@
-package com.ddooby.gachiillgi.domain.service;
+package com.ddooby.gachiillgi.domain.service.impl;
 
+import com.ddooby.gachiillgi.base.enums.UserStatusEnum;
 import com.ddooby.gachiillgi.domain.entity.User;
 import com.ddooby.gachiillgi.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 @Component("userDetailsService")
-public class CustomUserDetailsService implements UserDetailsService {
+public class CustomUserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
 
@@ -31,7 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     private org.springframework.security.core.userdetails.User createUser(String username, User user) {
-        if (!user.isActivated()) {
+        if (user.getActivated() != UserStatusEnum.ACTIVATED) {
             throw new RuntimeException(username + " -> 활성화되어 있지 않습니다.");
         }
 

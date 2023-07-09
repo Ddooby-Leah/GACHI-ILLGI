@@ -20,7 +20,6 @@ public class DefaultResponseHandler implements ResponseBodyAdvice<Object> {
         return true;
     }
 
-
     @Override
     public Object beforeBodyWrite(Object body,
                                   MethodParameter returnType,

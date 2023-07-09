@@ -1,4 +1,4 @@
-package com.ddooby.gachiillgi.base.handler;
+package com.ddooby.gachiillgi.base.exception;
 
 import com.ddooby.gachiillgi.base.enums.exception.ErrorCodeEnum;
 import lombok.Getter;

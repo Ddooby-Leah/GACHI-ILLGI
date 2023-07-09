@@ -2,40 +2,40 @@ package com.ddooby.gachiillgi.base.entity;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
-import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.EntityListeners;
+import javax.persistence.MappedSuperclass;
+import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
 @MappedSuperclass
-public class BaseUpdateEntity {
+@EntityListeners(AuditingEntityListener.class)
+public abstract class BaseUpdateEntity {
 
+    @CreatedDate
     @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
+    @CreatedBy
     @Column(nullable = false)
     private String createdBy;
 
+    @LastModifiedDate
     @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date modifiedAt;
+    private LocalDateTime lastModifiedAt;
 
+    @LastModifiedBy
     @Column(nullable = false)
-    private String modifiedBy;
-
-    @PrePersist
-    public void onCreate() {
-        this.createdAt = new Date();
-        this.modifiedAt = this.createdAt;
-    }
-
-    @PreUpdate
-    public void onUpdate() {
-        this.modifiedAt = new Date();
-    }
-
+    private String lastModifiedBy;
 }

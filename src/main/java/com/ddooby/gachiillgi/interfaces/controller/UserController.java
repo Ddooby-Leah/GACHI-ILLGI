@@ -1,7 +1,7 @@
 package com.ddooby.gachiillgi.interfaces.controller;
 
-import com.ddooby.gachiillgi.interfaces.dto.UserDTO;
 import com.ddooby.gachiillgi.domain.service.UserService;
+import com.ddooby.gachiillgi.interfaces.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,7 +25,7 @@ public class UserController {
 
     @PostMapping("/test-redirect")
     public void testRedirect(HttpServletResponse response) throws IOException {
-        response.sendRedirect("/api/user");
+        response.sendRedirect("/api/users");
     }
 
     @GetMapping("")

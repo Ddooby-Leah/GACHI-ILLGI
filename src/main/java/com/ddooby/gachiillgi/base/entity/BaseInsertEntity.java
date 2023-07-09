@@ -3,25 +3,22 @@ package com.ddooby.gachiillgi.base.entity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.*;
-import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
 @MappedSuperclass
-public class BaseInsertEntity {
+public abstract class BaseInsertEntity {
 
     @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @Column(nullable = false)
     private String createdBy;
-
-    @PrePersist
-    public void onCreate() {
-        this.createdAt = new Date();
-    }
 }

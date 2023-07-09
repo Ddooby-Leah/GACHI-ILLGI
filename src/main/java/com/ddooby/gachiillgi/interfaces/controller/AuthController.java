@@ -2,11 +2,11 @@ package com.ddooby.gachiillgi.interfaces.controller;
 
 import com.ddooby.gachiillgi.base.jwt.TokenProvider;
 import com.ddooby.gachiillgi.domain.service.MailService;
+import com.ddooby.gachiillgi.domain.service.UserService;
 import com.ddooby.gachiillgi.interfaces.dto.LoginRequestDTO;
 import com.ddooby.gachiillgi.interfaces.dto.MailSendDTO;
 import com.ddooby.gachiillgi.interfaces.dto.TokenDTO;
 import com.ddooby.gachiillgi.interfaces.dto.UserDTO;
-import com.ddooby.gachiillgi.domain.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-
 import java.util.HashMap;
 import java.util.Map;
 

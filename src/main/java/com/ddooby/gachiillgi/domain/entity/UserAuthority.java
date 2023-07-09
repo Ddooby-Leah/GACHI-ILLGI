@@ -1,5 +1,6 @@
 package com.ddooby.gachiillgi.domain.entity;
 
+import com.ddooby.gachiillgi.base.entity.BaseUpdateEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "user_authority")
-public class UserAuthority
+public class UserAuthority extends BaseUpdateEntity
 //        extends BaseInsertEntity
 {
 

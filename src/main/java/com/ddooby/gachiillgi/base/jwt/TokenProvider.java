@@ -1,7 +1,7 @@
 package com.ddooby.gachiillgi.base.jwt;
 
 import com.ddooby.gachiillgi.base.enums.exception.AuthErrorCodeEnum;
-import com.ddooby.gachiillgi.base.handler.BizException;
+import com.ddooby.gachiillgi.base.exception.BizException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
