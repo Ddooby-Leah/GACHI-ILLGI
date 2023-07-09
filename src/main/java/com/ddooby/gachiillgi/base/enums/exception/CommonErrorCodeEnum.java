@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum CommonErrorCodeEnum implements ErrorCodeEnum {
     REQUEST_ERROR("Invalid Request", "Invalid Request"),
+    JSON_MARSHALLING_ERROR("JSON 문자열로 변환중 에러 발생", "marshaling error")
     ;
 
     private final String longMessage;

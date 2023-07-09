@@ -29,24 +29,30 @@ import static com.ddooby.gachiillgi.base.enums.TokenEnum.AUTHORITIES_KEY;
 @Component
 public class TokenProvider implements InitializingBean {
 
-    private final String secret;
+    private final String tokenSecretKey;
+    private final String mailTokenSecretKey;
     private final long tokenValidityInMilliseconds;
     private final long authLinkValidityInSeconds;
-    private Key key;
+    private Key tokenKey;
+    private Key mailTokenKey;
 
     public TokenProvider(
-            @Value("${jwt.secret}") String secret,
+            @Value("${jwt.token-secret-key}") String tokenSecretKey,
+            @Value("${jwt.mail-token-secret-key}") String mailTokenSecretKey,
             @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds,
             @Value("${jwt.link-validity-in-seconds}") long authLinkValidityInSeconds) {
-        this.secret = secret;
+        this.tokenSecretKey = tokenSecretKey;
+        this.mailTokenSecretKey = mailTokenSecretKey;
         this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
         this.authLinkValidityInSeconds = authLinkValidityInSeconds;
     }
 
     @Override
     public void afterPropertiesSet() {
-        byte[] keyBytes = Decoders.BASE64.decode(secret);
-        this.key = Keys.hmacShaKeyFor(keyBytes);
+        byte[] keyBytes = Decoders.BASE64.decode(tokenSecretKey);
+        byte[] mailKeyBytes = Decoders.BASE64.decode(mailTokenSecretKey);
+        this.tokenKey = Keys.hmacShaKeyFor(keyBytes);
+        this.mailTokenKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String createToken(Authentication authentication) {
@@ -60,7 +66,7 @@ public class TokenProvider implements InitializingBean {
         return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY.getName(), authorities)
-                .signWith(key, SignatureAlgorithm.HS512)
+                .signWith(tokenKey, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
                 .compact();
     }
@@ -76,14 +82,14 @@ public class TokenProvider implements InitializingBean {
                 .setSubject(username)
                 .setIssuedAt(issuedAt)
                 .setExpiration(expirationDate)
-                .signWith(key, SignatureAlgorithm.HS512)
+                .signWith(mailTokenKey, SignatureAlgorithm.HS512)
                 .compact();
     }
 
     public String verifyTemporaryLink(String link) {
         try {
             Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(key)
+                    .setSigningKey(mailTokenKey)
                     .build()
                     .parseClaimsJws(link)
                     .getBody();
@@ -105,7 +111,7 @@ public class TokenProvider implements InitializingBean {
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts
                 .parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(tokenKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -124,7 +130,7 @@ public class TokenProvider implements InitializingBean {
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            Jwts.parserBuilder().setSigningKey(tokenKey).build().parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException | io.jsonwebtoken.security.SignatureException e) {
             throw new BizException(AuthErrorCodeEnum.INVALID_TOKEN_SIGNATURE);

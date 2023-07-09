@@ -53,6 +53,8 @@ public class AuthController {
         String username = mailSendDTO.getUsername();
         String temporaryLink = tokenProvider.createTemporaryLink(mailSendDTO.getUsername());
 
+        //TODO 유저 검증이 필요할까?
+
         log.debug("email = {} username = {} tempLink = {}", email, username, temporaryLink);
         String subject = "[가치일기] 안녕하세요, " + mailSendDTO.getUsername() + "님! 메일인증을 완료해주세요.";
         Map<String, Object> variables = new HashMap<>();

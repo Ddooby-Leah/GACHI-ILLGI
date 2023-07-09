@@ -3,9 +3,11 @@ package com.ddooby.gachiillgi.interfaces.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @Builder
 @Getter
+@ToString
 @RequiredArgsConstructor
 public class DefaultResponseDTO {
 
