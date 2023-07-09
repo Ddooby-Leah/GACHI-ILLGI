@@ -2,6 +2,7 @@ package com.ddooby.gachiillgi.domain.service.impl;
 
 import com.ddooby.gachiillgi.base.enums.UserRoleEnum;
 import com.ddooby.gachiillgi.base.enums.UserStatusEnum;
+import com.ddooby.gachiillgi.base.enums.exception.AuthErrorCodeEnum;
 import com.ddooby.gachiillgi.base.enums.exception.UserErrorCodeEnum;
 import com.ddooby.gachiillgi.base.exception.BizException;
 import com.ddooby.gachiillgi.base.util.SecurityUtil;
@@ -52,11 +53,21 @@ public class UserServiceImpl implements UserService {
         return UserDTO.from(userRepository.save(user));
     }
 
+    @Override
+    public void updateActivated(String username) {
+        User user = userRepository.findOneWithUserAuthorityByUsername(username)
+                .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND));
+
+        if (user.getActivated() == UserStatusEnum.ACTIVATED) {
+            throw new BizException(AuthErrorCodeEnum.ALEADY_COMPLETE_VERIFICATION);
+        } else {
+            user.setActivated(UserStatusEnum.ACTIVATED);
+        }
+    }
 
     public UserDTO getUserWithAuthorities(String username) {
         return UserDTO.from(userRepository.findOneWithUserAuthorityByUsername(username).orElse(null));
     }
-
 
     public UserDTO getMyUserWithAuthorities() {
         return UserDTO.from(

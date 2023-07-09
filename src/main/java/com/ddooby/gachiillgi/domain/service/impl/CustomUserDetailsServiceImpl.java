@@ -1,6 +1,8 @@
 package com.ddooby.gachiillgi.domain.service.impl;
 
 import com.ddooby.gachiillgi.base.enums.UserStatusEnum;
+import com.ddooby.gachiillgi.base.enums.exception.AuthErrorCodeEnum;
+import com.ddooby.gachiillgi.base.exception.BizException;
 import com.ddooby.gachiillgi.domain.entity.User;
 import com.ddooby.gachiillgi.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +35,7 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
 
     private org.springframework.security.core.userdetails.User createUser(String username, User user) {
         if (user.getActivated() != UserStatusEnum.ACTIVATED) {
-            throw new RuntimeException(username + " -> 활성화되어 있지 않습니다.");
+            throw new BizException(AuthErrorCodeEnum.MUST_MAIL_VERIFICATION);
         }
 
         List<GrantedAuthority> grantedAuthorities = user.getUserAuthoritySet().stream()

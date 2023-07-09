@@ -38,6 +38,9 @@ public class User extends BaseUpdateEntity {
     @Enumerated(EnumType.STRING)
     private UserStatusEnum activated;
 
+    @Column(name = "verification_code")
+    private String verificationCode;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private Set<UserAuthority> userAuthoritySet = new HashSet<>();

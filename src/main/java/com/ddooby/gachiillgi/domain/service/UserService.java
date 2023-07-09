@@ -8,6 +8,9 @@ public interface UserService {
     @Transactional
     UserDTO signup(UserDTO userDto);
 
+    @Transactional
+    void updateActivated(String username);
+
     @Transactional(readOnly = true)
     UserDTO getUserWithAuthorities(String username);
 

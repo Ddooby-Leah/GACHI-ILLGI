@@ -17,9 +17,8 @@ public enum PermitPathEnum {
     FAVICON_URI("/favicon.ico"),
     HELLO_URI("/api/user/hello"),
     REDIRECT_URI("/api/user/test-redirect"),
-    AUTHENTICATE_URI("/api/auth/login"),
-    SIGNUP_URI("/api/auth/signup"),
-    MAIL_URI("/api/auth/mail");
+    AUTH_URI("/api/auth/**")
+    ;
 
     private final String uri;
 

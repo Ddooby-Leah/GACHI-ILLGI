@@ -16,6 +16,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -29,13 +31,16 @@ public class TokenProvider implements InitializingBean {
 
     private final String secret;
     private final long tokenValidityInMilliseconds;
+    private final long authLinkValidityInSeconds;
     private Key key;
 
     public TokenProvider(
             @Value("${jwt.secret}") String secret,
-            @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds) {
+            @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds,
+            @Value("${jwt.link-validity-in-seconds}") long authLinkValidityInSeconds) {
         this.secret = secret;
         this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
+        this.authLinkValidityInSeconds = authLinkValidityInSeconds;
     }
 
     @Override
@@ -60,6 +65,43 @@ public class TokenProvider implements InitializingBean {
                 .compact();
     }
 
+    public String createTemporaryLink(String username) {
+        LocalDateTime currentTime = LocalDateTime.now();
+        LocalDateTime expirationTime = currentTime.plusSeconds(authLinkValidityInSeconds);
+
+        Date issuedAt = Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant());
+        Date expirationDate = Date.from(expirationTime.atZone(ZoneId.systemDefault()).toInstant());
+
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(issuedAt)
+                .setExpiration(expirationDate)
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
+    }
+
+    public String verifyTemporaryLink(String link) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(link)
+                    .getBody();
+
+            String username = claims.getSubject();
+            Date expiration = claims.getExpiration();
+
+            LocalDateTime expirationTime = LocalDateTime.ofInstant(expiration.toInstant(), ZoneId.systemDefault());
+            if (LocalDateTime.now().isAfter(expirationTime)) {
+                throw new BizException(AuthErrorCodeEnum.EXPIRED_MAIL_LINK);
+            }
+            return username;
+        } catch (Exception e) {
+            // 유효하지 않은 링크 처리할 내용
+            throw new BizException(AuthErrorCodeEnum.INVALID_MAIL_LINK);
+        }
+    }
+
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts
                 .parserBuilder()
@@ -68,7 +110,7 @@ public class TokenProvider implements InitializingBean {
                 .parseClaimsJws(token)
                 .getBody();
 
-        log.debug(claims.toString());
+//        log.debug(claims.toString());
 
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get(AUTHORITIES_KEY.getName()).toString().split(","))

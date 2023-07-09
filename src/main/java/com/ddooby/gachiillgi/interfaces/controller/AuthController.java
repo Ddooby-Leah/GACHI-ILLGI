@@ -18,10 +18,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -48,15 +46,33 @@ public class AuthController {
         return userService.signup(userDto);
     }
 
-    @PostMapping("/mail")
-    public void sendVerificationMail(@RequestBody MailSendDTO mailSendDTO) {
-        log.debug(mailSendDTO.toString());
+    @PostMapping("/send-mail")
+    public ResponseEntity<String> sendVerificationMail(@RequestBody MailSendDTO mailSendDTO) { // FIXME 코드 너무 더럽;
+
+        String email = mailSendDTO.getEmail();
+        String username = mailSendDTO.getUsername();
+        String temporaryLink = tokenProvider.createTemporaryLink(mailSendDTO.getUsername());
+
+        log.debug("email = {} username = {} tempLink = {}", email, username, temporaryLink);
         String subject = "[가치일기] 안녕하세요, " + mailSendDTO.getUsername() + "님! 메일인증을 완료해주세요.";
         Map<String, Object> variables = new HashMap<>();
         variables.put("username", mailSendDTO.getUsername() + "님 환영합니다!");
-        variables.put("data", "여기를 눌러주세요");
-        variables.put("location", "https://google.com");
+        variables.put("link", "http://localhost:8080/api/auth/verify-mail/?link=" + temporaryLink);
+        variables.put("location", "https://가치일기.com");
         mailService.send(subject, variables, mailSendDTO.getEmail());
+
+        return ResponseEntity.ok("인증 메일 전송 완료");
+    }
+
+    @GetMapping("/verify-mail")
+    public RedirectView verifyVerificationMail(@RequestParam String link) { // FIXME 어떻게 정리할까..?
+        String usernameByLink = tokenProvider.verifyTemporaryLink(link);
+        if (usernameByLink != null) {
+            userService.updateActivated(usernameByLink);
+            return new RedirectView("https://google.com");
+        } else {
+            return new RedirectView("/error");
+        }
     }
 
     @PostMapping("/login")
