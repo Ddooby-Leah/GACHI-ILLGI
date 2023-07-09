@@ -1,6 +1,7 @@
 package com.ddooby.gachiillgi.base.jwt;
 
-import com.ddooby.gachiillgi.base.exception.InvalidTokenException;
+import com.ddooby.gachiillgi.base.enums.exception.AuthErrorCodeEnum;
+import com.ddooby.gachiillgi.base.handler.BizException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -83,14 +84,12 @@ public class TokenProvider implements InitializingBean {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
-        } catch (SecurityException | MalformedJwtException e) {
-            throw new InvalidTokenException("잘못된 JWT 서명입니다.", e);
+        } catch (SecurityException | MalformedJwtException | io.jsonwebtoken.security.SignatureException e) {
+            throw new BizException(AuthErrorCodeEnum.INVALID_TOKEN_SIGNATURE);
         } catch (ExpiredJwtException e) {
-            throw new InvalidTokenException("만료된 JWT 토큰입니다.", e);
+            throw new BizException(AuthErrorCodeEnum.EXPIRED_TOKEN);
         } catch (UnsupportedJwtException e) {
-            throw new InvalidTokenException("지원되지 않는 JWT 토큰입니다.", e);
-        } catch (IllegalArgumentException e) {
-            throw new InvalidTokenException("JWT 토큰이 잘못되었습니다.", e);
+            throw new BizException(AuthErrorCodeEnum.INVALID_TOKEN);
         }
     }
 }

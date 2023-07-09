@@ -6,11 +6,12 @@ import lombok.RequiredArgsConstructor;
 public enum AuthErrorCodeEnum implements ErrorCodeEnum {
     INVALID_CREDENTIALS("Invalid credentials", "Invalid username or password"),
     PASSWORD_MISMATCH("Password mismatch", "Passwords do not match"),
-    INVALID_TOKEN("Invalid token", "Invalid token"),
-    EXPIRED_TOKEN("Expired token", "Token has expired"),
-    MISSING_AUTH_HEADER("Missing authorization header", "Authorization header is missing"),
-    UNAUTHORIZED_ACCESS("Unauthorized access", "Unauthorized access to the requested resource"),
-    ACCESS_DENIED("Access denied", "Access to the requested resource is denied"),
+    INVALID_TOKEN("This token is unsupported", "Invalid token"),
+    INVALID_TOKEN_SIGNATURE("잘못된 JWT 서명입니다.", "Invalid token"),
+    EXPIRED_TOKEN("Token has expired", "Invalid token"),
+    MISSING_AUTH_HEADER("Missing authorization header", "Invalid token"),
+    UNAUTHORIZED_ACCESS("Unauthorized access to the requested resource", "Unauthorized access"),
+    ACCESS_DENIED("Access to the requested resource is denied", "Access denied"),
     ;
 
     private final String longMessage;

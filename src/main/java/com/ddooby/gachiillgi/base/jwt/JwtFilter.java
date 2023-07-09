@@ -1,8 +1,9 @@
 package com.ddooby.gachiillgi.base.jwt;
 
 import com.ddooby.gachiillgi.base.enums.PermitPathEnum;
-import com.ddooby.gachiillgi.base.exception.InvalidTokenException;
-import com.ddooby.gachiillgi.interfaces.dto.ErrorResponseDTO;
+import com.ddooby.gachiillgi.base.enums.exception.ErrorCodeEnum;
+import com.ddooby.gachiillgi.base.handler.BizException;
+import com.ddooby.gachiillgi.interfaces.dto.DefaultErrorResponseDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -24,6 +25,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static com.ddooby.gachiillgi.base.enums.TokenEnum.TOKEN_COOKIE_HEADER;
+import static com.ddooby.gachiillgi.base.enums.exception.AuthErrorCodeEnum.UNAUTHORIZED_ACCESS;
 
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter {
@@ -40,7 +42,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     public void doFilterInternal(HttpServletRequest httpServletRequest,
                                  HttpServletResponse httpServletResponse,
-                                 FilterChain filterChain) throws IOException, ServletException {
+                                 FilterChain filterChain) throws IOException, ServletException, BizException {
 
         String jwt = resolveToken(httpServletRequest);
         String requestURI = httpServletRequest.getRequestURI();
@@ -56,9 +58,12 @@ public class JwtFilter extends OncePerRequestFilter {
                     log.debug("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
                     filterChain.doFilter(httpServletRequest, httpServletResponse);
                 }
-            } catch (InvalidTokenException e) {
-                log.debug("유효한 JWT 토큰이 없습니다, uri: {}", requestURI);
-                buildJwtErrorDTO(httpServletResponse, e.getMessage());
+                else {
+                    buildErrorDTO(httpServletResponse, UNAUTHORIZED_ACCESS, HttpServletResponse.SC_BAD_REQUEST);
+                }
+            } catch (BizException e) {
+                log.debug("Invalid Access Token, uri: {}", requestURI);
+                buildErrorDTO(httpServletResponse, e.getCode(), HttpServletResponse.SC_UNAUTHORIZED);
             }
         }
     }
@@ -91,20 +96,19 @@ public class JwtFilter extends OncePerRequestFilter {
         return false;
     }
 
-    private void buildJwtErrorDTO(HttpServletResponse httpServletResponse, String message) {
+    private void buildErrorDTO(HttpServletResponse httpServletResponse, ErrorCodeEnum code, int httpStatus) {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        httpServletResponse.setStatus(httpStatus);
         httpServletResponse.setCharacterEncoding("UTF-8");
         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        ErrorResponseDTO errorResponseDTO = ErrorResponseDTO.builder()
-                .status(HttpServletResponse.SC_UNAUTHORIZED)
-                .message(message)
-                .build();
+        DefaultErrorResponseDTO errorResponseDTO = DefaultErrorResponseDTO.error(
+                code.getName(),
+                code.getLongMessage(),
+                code.getShortMessage());
 
         try {
-            httpServletResponse.getWriter().write(
-                    objectMapper.writeValueAsString(errorResponseDTO));
+            ObjectMapper objectMapper = new ObjectMapper();
+            httpServletResponse.getWriter().write(objectMapper.writeValueAsString(errorResponseDTO));
         } catch (IOException e) {
             e.printStackTrace();
         }

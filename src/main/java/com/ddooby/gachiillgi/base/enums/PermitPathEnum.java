@@ -10,7 +10,7 @@ import java.util.Arrays;
 @Slf4j
 @RequiredArgsConstructor
 public enum PermitPathEnum {
-    MAIN_URI("/"),
+    H2_DATABASE_URI("/h2-console/**"),
     API_DOCS_URI("/api-docs/**"),
     SWAGGER_UI_URI("/swagger-ui/**"),
     ACTUATOR_URI("/actuator/**"),
