@@ -104,6 +104,11 @@ jobs:
           name: test-result
 
       - name: Write the testing result on PR
+        permissions:
+          contents: read
+          issues: read
+          checks: write
+          pull-requests: write
         uses: EnricoMi/publish-unit-test-result-action/composite@v2
         if: always() && github.event_name == 'pull_request'
         with:
