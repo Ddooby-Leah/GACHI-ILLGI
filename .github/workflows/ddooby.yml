@@ -97,7 +97,7 @@ jobs:
 
   Report-Test-Result:
     if: github.event_name == 'pull_request'
-    needs: Backend-CI
+    needs: Continuous-Integration
     # macos 환경에서 CI 실행 (환경은 github이 제공)
     runs-on: ubuntu-latest
     # 각 단계
@@ -126,7 +126,7 @@ jobs:
   Continuous-Deploy:
     # master 브랜치에 push 하는 경우에만 배포 JOB 실행
     if: github.event_name == 'push' && contains(github.ref, 'master')
-    needs: Backend-CI
+    needs: Continuous-Integration
     runs-on: ubuntu-latest
     steps:
 
