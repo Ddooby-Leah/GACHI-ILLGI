@@ -38,9 +38,6 @@ public class DefaultResponseHandler implements ResponseBodyAdvice<Object> {
                                   ServerHttpRequest request,
                                   ServerHttpResponse response) {
 
-        log.debug(selectedContentType.getType());
-        log.debug(returnType.getParameterName());
-
         if (selectedContentType.isCompatibleWith(MediaType.APPLICATION_JSON)) {
             if (body instanceof DefaultErrorResponseDTO) {
                 return body;

@@ -2,7 +2,11 @@ package com.ddooby.gachiillgi.base.handler;
 
 import com.ddooby.gachiillgi.base.enums.exception.ErrorCodeEnum;
 import com.ddooby.gachiillgi.base.exception.BizException;
+import com.ddooby.gachiillgi.base.util.SecurityUtil;
+import com.ddooby.gachiillgi.domain.service.SystemLogCommand;
+import com.ddooby.gachiillgi.domain.service.SystemLogService;
 import com.ddooby.gachiillgi.interfaces.dto.DefaultErrorResponseDTO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,13 +20,25 @@ import static org.springframework.http.HttpStatus.OK;
 
 @Slf4j
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
+
+    private final SystemLogService systemLogService;
+
     @ResponseStatus(OK)
     @ExceptionHandler(Exception.class)
-    public DefaultErrorResponseDTO defaultErrorHandler (Exception e) {
+    public DefaultErrorResponseDTO defaultErrorHandler (Exception e) { //TODO 리팩토링 대상
 
         log.error("## Biz exception response ##");
         log.error("{}" , e.toString());
+
+        systemLogService.save(
+                SystemLogCommand.builder()
+                        .level("ERROR")
+                        .message(e.getMessage())
+                        .createdBy(SecurityUtil.getCurrentUsername().isPresent()
+                                ? SecurityUtil.getCurrentUsername().get() : "")
+                        .build());
 
         boolean isBizException = e instanceof BizException;
         boolean isLoginException = e instanceof InternalAuthenticationServiceException;
