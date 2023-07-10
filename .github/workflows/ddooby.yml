@@ -114,14 +114,14 @@ jobs:
         with:
           junit_files: '**/test-result/TEST-*.xml'
           comment_title: '가치일기 Test Results'
-          github_token: ${{ secrets.SUBMODULE_ACCESS_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check Comment on the Code line.
         uses: mikepenz/action-junit-report@v3
         if: always() && github.event_name == 'pull_request'
         with:
           report_paths: '**/test-result/TEST-*.xml'
-          token: ${{ secrets.SUBMODULE_ACCESS_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   Continuous-Deploy:
     # master 브랜치에 push 하는 경우에만 배포 JOB 실행
