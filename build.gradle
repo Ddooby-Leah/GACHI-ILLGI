@@ -86,13 +86,15 @@ tasks.named('asciidoctor') {
     dependsOn test
 }
 
-tasks.register('copyProperties', Copy) {
-    copy {
-        from "./config"
-        include "*.yml"
-        into "src/main/resources"
-    }
+tasks.register('copyExternalProperties', Copy) {
+    from "./config"
+    include "*.yml"
+    into "src/main/resources"
 }
+
+processResources.dependsOn('copyExternalProperties')
+processTestResources.dependsOn('copyExternalProperties')
+
 
 //plain jar 생성 방지
 tasks.named("jar") {
