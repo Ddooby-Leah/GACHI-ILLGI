@@ -95,6 +95,11 @@ jobs:
     needs: Continuous-Integration
     # macos 환경에서 CI 실행 (환경은 github이 제공)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: read
+      checks: write
+      pull-requests: write
     # 각 단계
     steps:
       # 이전 Job에서 업로드한 Jar file 다운로드
@@ -104,11 +109,6 @@ jobs:
           name: test-result
 
       - name: Write the testing result on PR
-        permissions:
-          contents: read
-          issues: read
-          checks: write
-          pull-requests: write
         uses: EnricoMi/publish-unit-test-result-action/composite@v2
         if: always() && github.event_name == 'pull_request'
         with:
