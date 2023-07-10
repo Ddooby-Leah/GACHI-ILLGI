@@ -5,7 +5,7 @@ plugins {
     id 'org.asciidoctor.jvm.convert' version '3.3.2'
 }
 
-group = 'com.example'
+group = 'com.ddooby'
 version = '0.0.1-SNAPSHOT'
 
 java {
@@ -73,6 +73,14 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+tasks.withType(Test).configureEach {
+    testLogging {
+        outputs.upToDateWhen { false }
+        showStandardStreams = true
+        exceptionFormat = 'full'
+    }
+}
+
 tasks.named('asciidoctor') {
     inputs.dir snippetsDir
     dependsOn test
@@ -84,4 +92,9 @@ tasks.register('copyProperties', Copy) {
         include "*.yml"
         into "src/main/resources"
     }
+}
+
+//plain jar 생성 방지
+tasks.named("jar") {
+    enabled = false
 }
