@@ -123,7 +123,7 @@ jobs:
           report_paths: '**/test-result/TEST-*.xml'
           token: ${{ secrets.SUBMODULE_ACCESS_TOKEN }}
 
-  Continuous Deploy:
+  Continuous-Deploy:
     # master 브랜치에 push 하는 경우에만 배포 JOB 실행
     if: github.event_name == 'push' && contains(github.ref, 'master')
     needs: Backend-CI
@@ -167,8 +167,8 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ${{ secrets.DOCKER_ID }}/jaksim31-backend:${{github.run_number}}
-            ${{ secrets.DOCKER_ID }}/jaksim31-backend:latest
+            ${{ secrets.DOCKER_ID }}/gachi-diary-backend:${{github.run_number}}
+            ${{ secrets.DOCKER_ID }}/gachi-diary-backend:latest
           cache-from: type=gha    # gha=Github Action Cache
           cache-to: type=gha,mode=max
 
