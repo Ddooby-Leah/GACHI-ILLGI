@@ -1,11 +1,8 @@
 package com.ddooby.gachiillgi.base.handler;
 
-import com.ddooby.gachiillgi.base.enums.exception.CommonErrorCodeEnum;
-import com.ddooby.gachiillgi.base.exception.BizException;
 import com.ddooby.gachiillgi.base.util.CommonUtil;
 import com.ddooby.gachiillgi.interfaces.dto.DefaultErrorResponseDTO;
 import com.ddooby.gachiillgi.interfaces.dto.DefaultResponseDTO;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,13 +11,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 @Slf4j
 @RequiredArgsConstructor
-@RestControllerAdvice
+@RestControllerAdvice({
+        "com.ddooby.gachiillgi.interfaces.controller",
+})
 public class DefaultResponseHandler implements ResponseBodyAdvice<Object> {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
