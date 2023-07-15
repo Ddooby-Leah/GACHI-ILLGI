@@ -11,7 +11,7 @@ import com.ddooby.gachiillgi.domain.entity.User;
 import com.ddooby.gachiillgi.domain.entity.UserAuthority;
 import com.ddooby.gachiillgi.domain.repository.UserRepository;
 import com.ddooby.gachiillgi.domain.service.UserService;
-import com.ddooby.gachiillgi.interfaces.dto.UserDTO;
+import com.ddooby.gachiillgi.interfaces.dto.request.UserRequestDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,8 +27,8 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
 
-    public UserDTO signup(UserDTO userDto) {
-        if (userRepository.findOneWithUserAuthorityByUsername(userDto.getUsername()).orElse(null) != null) {
+    public UserRequestDTO signup(UserRequestDTO userRequestDto) {
+        if (userRepository.findOneWithUserAuthorityByUsername(userRequestDto.getUsername()).orElse(null) != null) {
             throw new BizException(UserErrorCodeEnum.DUPLICATE_USERNAME);
         }
 
@@ -37,9 +37,9 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         User user = User.builder()
-                .username(userDto.getUsername())
-                .password(passwordEncoder.encode(userDto.getPassword()))
-                .nickname(userDto.getNickname())
+                .username(userRequestDto.getUsername())
+                .password(passwordEncoder.encode(userRequestDto.getPassword()))
+                .nickname(userRequestDto.getNickname())
                 .activated(UserStatusEnum.PENDING)
                 .build();
 
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
                         .build())
         );
 
-        return UserDTO.from(userRepository.save(user));
+        return UserRequestDTO.from(userRepository.save(user));
     }
 
     @Override
@@ -65,12 +65,12 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public UserDTO getUserWithAuthorities(String username) {
-        return UserDTO.from(userRepository.findOneWithUserAuthorityByUsername(username).orElse(null));
+    public UserRequestDTO getUserWithAuthorities(String username) {
+        return UserRequestDTO.from(userRepository.findOneWithUserAuthorityByUsername(username).orElse(null));
     }
 
-    public UserDTO getMyUserWithAuthorities() {
-        return UserDTO.from(
+    public UserRequestDTO getMyUserWithAuthorities() {
+        return UserRequestDTO.from(
                 SecurityUtil.getCurrentUsername()
                         .flatMap(userRepository::findOneWithUserAuthorityByUsername)
                         .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND))

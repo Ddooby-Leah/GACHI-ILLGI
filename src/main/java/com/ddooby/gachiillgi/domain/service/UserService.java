@@ -1,19 +1,19 @@
 package com.ddooby.gachiillgi.domain.service;
 
-import com.ddooby.gachiillgi.interfaces.dto.UserDTO;
+import com.ddooby.gachiillgi.interfaces.dto.request.UserRequestDTO;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface UserService {
 
     @Transactional
-    UserDTO signup(UserDTO userDto);
+    UserRequestDTO signup(UserRequestDTO userRequestDto);
 
     @Transactional
     void updateActivated(String username);
 
     @Transactional(readOnly = true)
-    UserDTO getUserWithAuthorities(String username);
+    UserRequestDTO getUserWithAuthorities(String username);
 
     @Transactional(readOnly = true)
-    UserDTO getMyUserWithAuthorities();
+    UserRequestDTO getMyUserWithAuthorities();
 }

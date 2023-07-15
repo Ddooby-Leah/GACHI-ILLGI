@@ -3,10 +3,10 @@ package com.ddooby.gachiillgi.interfaces.controller;
 import com.ddooby.gachiillgi.base.jwt.TokenProvider;
 import com.ddooby.gachiillgi.domain.service.MailService;
 import com.ddooby.gachiillgi.domain.service.UserService;
-import com.ddooby.gachiillgi.interfaces.dto.LoginRequestDTO;
-import com.ddooby.gachiillgi.interfaces.dto.MailSendDTO;
-import com.ddooby.gachiillgi.interfaces.dto.TokenDTO;
-import com.ddooby.gachiillgi.interfaces.dto.UserDTO;
+import com.ddooby.gachiillgi.interfaces.dto.request.LoginRequestDTO;
+import com.ddooby.gachiillgi.interfaces.dto.request.MailSendRequestDTO;
+import com.ddooby.gachiillgi.interfaces.dto.response.TokenResponseDTO;
+import com.ddooby.gachiillgi.interfaces.dto.request.UserRequestDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,26 +42,26 @@ public class AuthController {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @PostMapping("/signup")
-    public UserDTO signup(@Valid @RequestBody UserDTO userDto) {
-        return userService.signup(userDto);
+    public UserRequestDTO signup(@Valid @RequestBody UserRequestDTO userRequestDto) {
+        return userService.signup(userRequestDto);
     }
 
     @PostMapping("/send-mail")
-    public ResponseEntity<String> sendVerificationMail(@RequestBody MailSendDTO mailSendDTO) { // FIXME 코드 너무 더럽;
+    public ResponseEntity<String> sendVerificationMail(@RequestBody MailSendRequestDTO mailSendRequestDTO) { // FIXME 코드 너무 더럽;
 
-        String email = mailSendDTO.getEmail();
-        String username = mailSendDTO.getUsername();
-        String temporaryLink = tokenProvider.createTemporaryLink(mailSendDTO.getUsername());
+        String email = mailSendRequestDTO.getEmail();
+        String username = mailSendRequestDTO.getUsername();
+        String temporaryLink = tokenProvider.createTemporaryLink(mailSendRequestDTO.getUsername());
 
         //TODO 유저 검증이 필요할까?
 
         log.debug("email = {} username = {} tempLink = {}", email, username, temporaryLink);
-        String subject = "[가치일기] 안녕하세요, " + mailSendDTO.getUsername() + "님! 메일인증을 완료해주세요.";
+        String subject = "[가치일기] 안녕하세요, " + mailSendRequestDTO.getUsername() + "님! 메일인증을 완료해주세요.";
         Map<String, Object> variables = new HashMap<>();
-        variables.put("username", mailSendDTO.getUsername() + "님 환영합니다!");
+        variables.put("username", mailSendRequestDTO.getUsername() + "님 환영합니다!");
         variables.put("link", "http://localhost:8080/api/auth/verify-mail/?link=" + temporaryLink);
         variables.put("location", "https://가치일기.com");
-        mailService.send(subject, variables, mailSendDTO.getEmail());
+        mailService.send(subject, variables, mailSendRequestDTO.getEmail());
 
         return ResponseEntity.ok("인증 메일 전송 완료");
     }
@@ -78,7 +78,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenDTO> authorize(@Valid @RequestBody LoginRequestDTO loginRequestDto) {
+    public ResponseEntity<TokenResponseDTO> authorize(@Valid @RequestBody LoginRequestDTO loginRequestDto) {
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword());
@@ -100,6 +100,6 @@ public class AuthController {
                         .toString()
         );
 
-        return new ResponseEntity<>(new TokenDTO(token), httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(new TokenResponseDTO(token), httpHeaders, HttpStatus.OK);
     }
 }

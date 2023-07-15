@@ -1,6 +1,6 @@
 package com.ddooby.gachiillgi.base.handler;
 
-import com.ddooby.gachiillgi.interfaces.dto.ErrorResponseDTO;
+import com.ddooby.gachiillgi.interfaces.dto.response.ErrorResponseDTO;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.validation.BindingResult;

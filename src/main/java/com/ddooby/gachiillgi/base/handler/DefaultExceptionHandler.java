@@ -5,7 +5,7 @@ import com.ddooby.gachiillgi.base.exception.BizException;
 import com.ddooby.gachiillgi.base.util.SecurityUtil;
 import com.ddooby.gachiillgi.domain.service.SystemLogCommand;
 import com.ddooby.gachiillgi.domain.service.SystemLogService;
-import com.ddooby.gachiillgi.interfaces.dto.DefaultErrorResponseDTO;
+import com.ddooby.gachiillgi.interfaces.dto.response.DefaultErrorResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;

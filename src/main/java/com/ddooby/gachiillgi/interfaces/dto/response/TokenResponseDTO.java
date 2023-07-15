@@ -1,4 +1,4 @@
-package com.ddooby.gachiillgi.interfaces.dto;
+package com.ddooby.gachiillgi.interfaces.dto.response;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TokenDTO {
+public class TokenResponseDTO {
 
     private String token;
 }

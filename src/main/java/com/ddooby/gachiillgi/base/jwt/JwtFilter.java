@@ -3,7 +3,7 @@ package com.ddooby.gachiillgi.base.jwt;
 import com.ddooby.gachiillgi.base.enums.PermitPathEnum;
 import com.ddooby.gachiillgi.base.enums.exception.ErrorCodeEnum;
 import com.ddooby.gachiillgi.base.exception.BizException;
-import com.ddooby.gachiillgi.interfaces.dto.DefaultErrorResponseDTO;
+import com.ddooby.gachiillgi.interfaces.dto.response.DefaultErrorResponseDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;

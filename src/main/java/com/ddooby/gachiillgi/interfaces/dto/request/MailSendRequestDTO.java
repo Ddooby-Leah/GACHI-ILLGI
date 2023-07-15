@@ -1,4 +1,4 @@
-package com.ddooby.gachiillgi.interfaces.dto;
+package com.ddooby.gachiillgi.interfaces.dto.request;
 
 import lombok.*;
 
@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class MailSendDTO {
+public class MailSendRequestDTO {
 
     @NotNull
     private String username;

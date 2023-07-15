@@ -1,6 +1,7 @@
-package com.ddooby.gachiillgi.interfaces.dto;
+package com.ddooby.gachiillgi.interfaces.dto.request;
 
 import com.ddooby.gachiillgi.domain.entity.User;
+import com.ddooby.gachiillgi.interfaces.dto.response.AuthorityResponseDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
+public class UserRequestDTO {
 
     @NotNull
     @Size(min = 3, max = 50)
@@ -31,17 +32,17 @@ public class UserDTO {
     private String nickname;
 
     @JsonIgnore
-    private Set<AuthorityDTO> authorityDtoSet;
+    private Set<AuthorityResponseDTO> authorityResponseDtoSet;
 
-    public static UserDTO from(User user) {
+    public static UserRequestDTO from(User user) {
         if(user == null) return null;
 
-        return UserDTO.builder()
+        return UserRequestDTO.builder()
                 .username(user.getUsername())
                 .nickname(user.getNickname())
-                .authorityDtoSet(user.getUserAuthoritySet().stream()
+                .authorityResponseDtoSet(user.getUserAuthoritySet().stream()
                         .map(authority ->
-                                AuthorityDTO.builder()
+                                AuthorityResponseDTO.builder()
                                         .authorityName(authority.getAuthority().getAuthorityName())
                                         .build())
                         .collect(Collectors.toSet()))
