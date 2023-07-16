@@ -50,15 +50,15 @@ public class AuthController {
     public ResponseEntity<String> sendVerificationMail(@RequestBody MailSendRequestDTO mailSendRequestDTO) { // FIXME 코드 너무 더럽;
 
         String email = mailSendRequestDTO.getEmail();
-        String username = mailSendRequestDTO.getUsername();
-        String temporaryLink = tokenProvider.createTemporaryLink(mailSendRequestDTO.getUsername());
+        String username = mailSendRequestDTO.getNickname();
+        String temporaryLink = tokenProvider.createTemporaryLink(mailSendRequestDTO.getNickname());
 
         //TODO 유저 검증이 필요할까?
 
         log.debug("email = {} username = {} tempLink = {}", email, username, temporaryLink);
-        String subject = "[가치일기] 안녕하세요, " + mailSendRequestDTO.getUsername() + "님! 메일인증을 완료해주세요.";
+        String subject = "[가치일기] 안녕하세요, " + mailSendRequestDTO.getNickname() + "님! 메일인증을 완료해주세요.";
         Map<String, Object> variables = new HashMap<>();
-        variables.put("username", mailSendRequestDTO.getUsername() + "님 환영합니다!");
+        variables.put("nickname", mailSendRequestDTO.getNickname() + "님 환영합니다!");
         variables.put("link", "http://localhost:8080/api/auth/verify-mail/?link=" + temporaryLink);
         variables.put("location", "https://가치일기.com");
         mailService.send(subject, variables, mailSendRequestDTO.getEmail());
@@ -68,9 +68,9 @@ public class AuthController {
 
     @GetMapping("/verify-mail")
     public RedirectView verifyVerificationMail(@RequestParam String link) { // FIXME 어떻게 정리할까..?
-        String usernameByLink = tokenProvider.verifyTemporaryLink(link);
-        if (usernameByLink != null) {
-            userService.updateActivated(usernameByLink);
+        String email = tokenProvider.verifyTemporaryLink(link);
+        if (email != null) {
+            userService.updateActivated(email);
             return new RedirectView("https://google.com");
         } else {
             return new RedirectView("/error");
@@ -81,7 +81,7 @@ public class AuthController {
     public ResponseEntity<TokenResponseDTO> authorize(@Valid @RequestBody LoginRequestDTO loginRequestDto) {
 
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword());
+                new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword());
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);

@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 public class MailSendRequestDTO {
 
     @NotNull
-    private String username;
+    private String nickname;
 
     @NotNull
     private String email;

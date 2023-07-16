@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum AuthErrorCodeEnum implements ErrorCodeEnum {
-    INVALID_CREDENTIALS("Invalid credentials", "Invalid username or password"),
+    INVALID_CREDENTIALS("Invalid credentials", "Invalid email or password"),
     PASSWORD_MISMATCH("Password mismatch", "Passwords do not match"),
     INVALID_TOKEN("This token is unsupported", "Invalid token"),
     INVALID_TOKEN_SIGNATURE("잘못된 JWT 서명입니다.", "Invalid token"),

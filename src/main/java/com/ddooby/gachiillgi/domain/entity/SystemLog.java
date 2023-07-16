@@ -13,6 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "system_log")
 public class SystemLog extends BaseInsertEntity {
 
     @Id

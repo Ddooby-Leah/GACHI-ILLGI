@@ -36,8 +36,8 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
                 SystemLogCommand.builder()
                         .level("ERROR")
                         .message(e.getMessage())
-                        .createdBy(SecurityUtil.getCurrentUsername().isPresent()
-                                ? SecurityUtil.getCurrentUsername().get() : "")
+                        .createdBy(SecurityUtil.getCurrentUserEmail().isPresent()
+                                ? SecurityUtil.getCurrentUserEmail().get() : "")
                         .build());
 
         boolean isBizException = e instanceof BizException;

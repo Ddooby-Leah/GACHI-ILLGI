@@ -9,10 +9,10 @@ public interface UserService {
     UserRequestDTO signup(UserRequestDTO userRequestDto);
 
     @Transactional
-    void updateActivated(String username);
+    void updateActivated(String email);
 
     @Transactional(readOnly = true)
-    UserRequestDTO getUserWithAuthorities(String username);
+    UserRequestDTO getUserWithAuthorities(String email);
 
     @Transactional(readOnly = true)
     UserRequestDTO getMyUserWithAuthorities();

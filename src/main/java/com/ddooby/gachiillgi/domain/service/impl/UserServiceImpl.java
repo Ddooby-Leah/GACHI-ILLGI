@@ -9,6 +9,7 @@ import com.ddooby.gachiillgi.base.util.SecurityUtil;
 import com.ddooby.gachiillgi.domain.entity.Authority;
 import com.ddooby.gachiillgi.domain.entity.User;
 import com.ddooby.gachiillgi.domain.entity.UserAuthority;
+import com.ddooby.gachiillgi.domain.repository.AuthorityRepository;
 import com.ddooby.gachiillgi.domain.repository.UserRepository;
 import com.ddooby.gachiillgi.domain.service.UserService;
 import com.ddooby.gachiillgi.interfaces.dto.request.UserRequestDTO;
@@ -17,6 +18,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.Column;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.time.Instant;
 import java.util.Collections;
 
 @Slf4j
@@ -25,21 +30,23 @@ import java.util.Collections;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthorityRepository authorityRepository;
 
 
     public UserRequestDTO signup(UserRequestDTO userRequestDto) {
-        if (userRepository.findOneWithUserAuthorityByUsername(userRequestDto.getUsername()).orElse(null) != null) {
-            throw new BizException(UserErrorCodeEnum.DUPLICATE_USERNAME);
+        if (userRepository.findOneWithUserAuthorityByEmail(userRequestDto.getEmail()).orElse(null) != null) {
+            throw new BizException(UserErrorCodeEnum.DUPLICATE_EMAIL);
         }
 
-        Authority authority = Authority.builder()
-                .authorityName(UserRoleEnum.ROLE_USER.name())
-                .build();
+        Authority authority = authorityRepository.findByAuthorityName(UserRoleEnum.ROLE_USER.name());
 
         User user = User.builder()
-                .username(userRequestDto.getUsername())
+                .email(userRequestDto.getEmail())
                 .password(passwordEncoder.encode(userRequestDto.getPassword()))
                 .nickname(userRequestDto.getNickname())
+                .name(userRequestDto.getName())
+                .sex(userRequestDto.getSex())
+                .birthday(userRequestDto.getBirthday())
                 .activated(UserStatusEnum.PENDING)
                 .build();
 
@@ -54,8 +61,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateActivated(String username) {
-        User user = userRepository.findOneWithUserAuthorityByUsername(username)
+    public void updateActivated(String email) {
+        User user = userRepository.findOneWithUserAuthorityByEmail(email)
                 .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND));
 
         if (user.getActivated() == UserStatusEnum.ACTIVATED) {
@@ -65,14 +72,14 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public UserRequestDTO getUserWithAuthorities(String username) {
-        return UserRequestDTO.from(userRepository.findOneWithUserAuthorityByUsername(username).orElse(null));
+    public UserRequestDTO getUserWithAuthorities(String email) {
+        return UserRequestDTO.from(userRepository.findOneWithUserAuthorityByEmail(email).orElse(null));
     }
 
     public UserRequestDTO getMyUserWithAuthorities() {
         return UserRequestDTO.from(
-                SecurityUtil.getCurrentUsername()
-                        .flatMap(userRepository::findOneWithUserAuthorityByUsername)
+                SecurityUtil.getCurrentUserEmail()
+                        .flatMap(userRepository::findOneWithUserAuthorityByEmail)
                         .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND))
         );
     }

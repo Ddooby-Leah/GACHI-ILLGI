@@ -71,7 +71,7 @@ public class TokenProvider implements InitializingBean {
                 .compact();
     }
 
-    public String createTemporaryLink(String username) {
+    public String createTemporaryLink(String email) {
         LocalDateTime currentTime = LocalDateTime.now();
         LocalDateTime expirationTime = currentTime.plusSeconds(authLinkValidityInSeconds);
 
@@ -79,7 +79,7 @@ public class TokenProvider implements InitializingBean {
         Date expirationDate = Date.from(expirationTime.atZone(ZoneId.systemDefault()).toInstant());
 
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(email)
                 .setIssuedAt(issuedAt)
                 .setExpiration(expirationDate)
                 .signWith(mailTokenKey, SignatureAlgorithm.HS512)
@@ -94,14 +94,14 @@ public class TokenProvider implements InitializingBean {
                     .parseClaimsJws(link)
                     .getBody();
 
-            String username = claims.getSubject();
+            String email = claims.getSubject();
             Date expiration = claims.getExpiration();
 
             LocalDateTime expirationTime = LocalDateTime.ofInstant(expiration.toInstant(), ZoneId.systemDefault());
             if (LocalDateTime.now().isAfter(expirationTime)) {
                 throw new BizException(AuthErrorCodeEnum.EXPIRED_MAIL_LINK);
             }
-            return username;
+            return email;
         } catch (Exception e) {
             // 유효하지 않은 링크 처리할 내용
             throw new BizException(AuthErrorCodeEnum.INVALID_MAIL_LINK);

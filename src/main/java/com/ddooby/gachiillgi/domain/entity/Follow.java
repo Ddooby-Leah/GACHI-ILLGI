@@ -1,34 +1,33 @@
 package com.ddooby.gachiillgi.domain.entity;
 
-import com.ddooby.gachiillgi.base.entity.BaseUpdateEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
-@Getter
-@Setter
-@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "user_authority")
-public class UserAuthority extends BaseUpdateEntity
-{
-
+@Getter
+@Setter
+@Entity(name = "Follow")
+@Table(name = "follow")
+public class Follow {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "follow_id", nullable = false)
     private Long id;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "following_id")
+    private User followingUser;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "authority_id")
-    private Authority authority;
+    @JoinColumn(name = "follower_id")
+    private User followerUser;
 
 }

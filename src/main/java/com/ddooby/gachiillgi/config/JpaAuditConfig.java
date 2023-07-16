@@ -10,6 +10,6 @@ public class JpaAuditConfig {
     @Bean
     public AuditorAware<String> auditorProvider() {
         // 람다를 이용
-        return SecurityUtil::getCurrentUsername;
+        return SecurityUtil::getCurrentUserEmail;
     }
 }

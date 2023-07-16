@@ -34,9 +34,9 @@ public class UserController {
         return userService.getMyUserWithAuthorities();
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/{email}")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public UserRequestDTO getUserInfo(@PathVariable String username) {
-        return userService.getUserWithAuthorities(username);
+    public UserRequestDTO getUserInfo(@PathVariable String email) {
+        return userService.getUserWithAuthorities(email);
     }
 }

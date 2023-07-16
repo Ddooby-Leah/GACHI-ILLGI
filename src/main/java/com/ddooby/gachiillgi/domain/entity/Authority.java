@@ -3,10 +3,9 @@ package com.ddooby.gachiillgi.domain.entity;
 import com.ddooby.gachiillgi.base.entity.BaseUpdateEntity;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 
 @Getter
@@ -19,6 +18,13 @@ import javax.persistence.Table;
 public class Authority extends BaseUpdateEntity {
 
     @Id
-    @Column(name = "authority_name", length = 50)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "authority_id", nullable = false)
+    private long id;
+
+    @Size(max = 20)
+    @NotNull
+    @Column(name = "authority_name", nullable = false, length = 20)
     private String authorityName;
+
 }

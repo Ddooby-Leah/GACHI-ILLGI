@@ -6,7 +6,8 @@ import lombok.RequiredArgsConstructor;
 public enum UserErrorCodeEnum implements ErrorCodeEnum {
 
     USER_NOT_FOUND("User not found", "User not found"),
-    DUPLICATE_USERNAME("Duplicate username", "Username already exists"),
+    DUPLICATE_EMAIL("Duplicate email", "Email already exists"),
+    DUPLICATE_NICKNAME("Duplicate nickname", "Nickname already exists"),
     INVALID_PASSWORD("Invalid password", "Invalid password"),
     INVALID_EMAIL_FORMAT("Invalid email format", "Invalid email format"),;
 

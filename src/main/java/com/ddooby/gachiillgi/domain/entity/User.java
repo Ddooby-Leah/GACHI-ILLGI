@@ -6,6 +6,10 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,8 +29,8 @@ public class User extends BaseUpdateEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(name = "username", length = 50, unique = true)
-    private String username;
+    @Column(name = "email", length = 50, unique = true)
+    private String email;
 
     @Column(name = "password", length = 100)
     private String password;
@@ -38,8 +42,23 @@ public class User extends BaseUpdateEntity {
     @Enumerated(EnumType.STRING)
     private UserStatusEnum activated;
 
-    @Column(name = "verification_code")
-    private String verificationCode;
+    @Size(max = 20)
+    @NotNull
+    @Column(name = "name", nullable = false, length = 20)
+    private String name;
+
+    @Size(max = 10)
+    @NotNull
+    @Column(name = "sex", nullable = false, length = 10)
+    private String sex;
+
+    @NotNull
+    @Column(name = "birthday", nullable = false)
+    private LocalDate birthday;
+
+    @Size(max = 100)
+    @Column(name = "profile_image", length = 100)
+    private String profileImage;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude

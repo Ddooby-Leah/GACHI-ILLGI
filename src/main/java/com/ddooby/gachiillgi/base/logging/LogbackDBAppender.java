@@ -25,8 +25,8 @@ public class LogbackDBAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
                 SystemLogCommand.builder()
                         .level(eventObject.getLevel().toString())
                         .message(eventObject.getFormattedMessage())
-                        .createdBy(SecurityUtil.getCurrentUsername().isPresent()
-                                ? SecurityUtil.getCurrentUsername().get() : "")
+                        .createdBy(SecurityUtil.getCurrentUserEmail().isPresent()
+                                ? SecurityUtil.getCurrentUserEmail().get() : "")
                         .build());
     }
 
