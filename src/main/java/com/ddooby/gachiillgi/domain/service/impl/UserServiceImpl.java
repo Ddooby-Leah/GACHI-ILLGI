@@ -57,7 +57,9 @@ public class UserServiceImpl implements UserService {
                         .build())
         );
 
-        return UserRequestDTO.from(userRepository.save(user));
+        return UserRequestDTO.from(
+                userRepository.save(user)
+        );
     }
 
     @Override

@@ -22,7 +22,6 @@ public class Authority extends BaseUpdateEntity {
     @Column(name = "authority_id", nullable = false)
     private long id;
 
-    @Size(max = 20)
     @NotNull
     @Column(name = "authority_name", nullable = false, length = 20)
     private String authorityName;

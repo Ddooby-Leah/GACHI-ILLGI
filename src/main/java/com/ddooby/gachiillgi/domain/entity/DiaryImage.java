@@ -1,5 +1,6 @@
 package com.ddooby.gachiillgi.domain.entity;
 
+import com.ddooby.gachiillgi.base.entity.BaseUpdateEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,13 +16,12 @@ import javax.validation.constraints.Size;
 @Setter
 @Entity(name = "DiaryImage")
 @Table(name = "diary_image")
-public class DiaryImage {
+public class DiaryImage extends BaseUpdateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "diray_image_id", nullable = false)
     private Long id;
 
-    @Size(max = 255)
     @NotNull
     @Column(name = "image_url", nullable = false)
     private String imageUrl;

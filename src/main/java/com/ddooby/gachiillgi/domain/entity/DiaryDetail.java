@@ -1,20 +1,25 @@
 package com.ddooby.gachiillgi.domain.entity;
 
+import com.ddooby.gachiillgi.base.entity.BaseUpdateEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@SuperBuilder
 @Entity(name = "DiaryDetail")
 @Table(name = "diary_detail")
-public class DiaryDetail {
+public class DiaryDetail extends BaseUpdateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "diary_detail_id", nullable = false)
@@ -29,5 +34,8 @@ public class DiaryDetail {
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "diary_id", nullable = false)
     private Diary diary;
+
+    @OneToMany(mappedBy = "diaryDetail")
+    private List<Comment> comments = new ArrayList<>();
 
 }

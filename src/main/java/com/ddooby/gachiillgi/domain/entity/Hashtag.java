@@ -1,5 +1,6 @@
 package com.ddooby.gachiillgi.domain.entity;
 
+import com.ddooby.gachiillgi.base.entity.BaseInsertEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,13 +16,12 @@ import javax.validation.constraints.Size;
 @Setter
 @Entity(name = "Hashtag")
 @Table(name = "hashtag")
-public class Hashtag {
+public class Hashtag extends BaseInsertEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "hashtag_id", nullable = false)
     private Long id;
 
-    @Size(max = 20)
     @NotNull
     @Column(name = "name", nullable = false, length = 20)
     private String name;

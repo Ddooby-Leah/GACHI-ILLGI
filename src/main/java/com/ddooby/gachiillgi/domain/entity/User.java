@@ -7,20 +7,20 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
 @Getter
 @Setter
-@ToString
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@ToString
 @Table(name = "users")
 public class User extends BaseUpdateEntity {
 
@@ -42,12 +42,10 @@ public class User extends BaseUpdateEntity {
     @Enumerated(EnumType.STRING)
     private UserStatusEnum activated;
 
-    @Size(max = 20)
     @NotNull
     @Column(name = "name", nullable = false, length = 20)
     private String name;
 
-    @Size(max = 10)
     @NotNull
     @Column(name = "sex", nullable = false, length = 10)
     private String sex;
@@ -56,13 +54,15 @@ public class User extends BaseUpdateEntity {
     @Column(name = "birthday", nullable = false)
     private LocalDate birthday;
 
-    @Size(max = 100)
     @Column(name = "profile_image", length = 100)
     private String profileImage;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private Set<UserAuthority> userAuthoritySet = new HashSet<>();
+
+    @OneToMany(mappedBy = "followedUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Follow> followerUserList = new ArrayList<>();
 
     public void updateAuthority(UserAuthority userAuthority) {
         //TODO 삭제 기능

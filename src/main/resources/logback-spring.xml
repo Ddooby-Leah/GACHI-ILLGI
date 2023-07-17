@@ -3,7 +3,7 @@
 
     <appender name="DBAppender" class="com.ddooby.gachiillgi.base.logging.LogbackDBAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>Info</level>
+            <level>Error</level>
         </filter>
     </appender>
 

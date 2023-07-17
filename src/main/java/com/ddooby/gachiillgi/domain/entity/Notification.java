@@ -1,5 +1,6 @@
 package com.ddooby.gachiillgi.domain.entity;
 
+import com.ddooby.gachiillgi.base.entity.BaseInsertEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,23 +16,20 @@ import javax.validation.constraints.Size;
 @Setter
 @Entity(name = "Notification")
 @Table(name = "notification")
-public class Notification {
+public class Notification extends BaseInsertEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notification_id", nullable = false)
     private Long id;
 
-    @Size(max = 20)
     @NotNull
     @Column(name = "type", nullable = false, length = 20)
     private String type;
 
-    @Size(max = 255)
     @NotNull
     @Column(name = "content", nullable = false)
     private String content;
 
-    @Size(max = 50)
     @NotNull
     @Column(name = "method", nullable = false, length = 50)
     private String method;

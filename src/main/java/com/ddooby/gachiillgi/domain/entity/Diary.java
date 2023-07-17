@@ -1,27 +1,31 @@
 package com.ddooby.gachiillgi.domain.entity;
 
+import com.ddooby.gachiillgi.base.entity.BaseUpdateEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@SuperBuilder
 @Entity(name = "Diary")
 @Table(name = "diary")
-public class Diary {
+public class Diary extends BaseUpdateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "diary_id", nullable = false)
     private Long id;
 
-    @Size(max = 255)
     @Column(name = "thumbnail_url")
     private String thumbnailUrl;
 
@@ -29,5 +33,7 @@ public class Diary {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+
 
 }

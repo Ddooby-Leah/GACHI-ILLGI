@@ -94,7 +94,7 @@ public class AuthController {
                 ResponseCookie.from(TOKEN_COOKIE_HEADER.getName(), token)
                         .maxAge(Long.parseLong(tokenExpireTime))
                         .secure(true)
-                        .httpOnly(true)
+//                        .httpOnly(true)
                         .path("/")
                         .build()
                         .toString()

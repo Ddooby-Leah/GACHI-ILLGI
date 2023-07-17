@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 @OpenAPIDefinition(
         servers = {@Server(url = "http://localhost:8080"),
-                @Server(url = "https://jaksim31.xyz")},
+                @Server(url = "http://ec2-3-36-55-16.ap-northeast-2.compute.amazonaws.com:8080")},
 
         info = @Info(
                 title = "가치일기 API",

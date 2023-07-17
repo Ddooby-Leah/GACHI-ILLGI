@@ -1,9 +1,11 @@
 package com.ddooby.gachiillgi.domain.entity;
 
+import com.ddooby.gachiillgi.base.entity.BaseInsertEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,7 +16,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @Entity(name = "DiaryHashtag")
 @Table(name = "diary_hashtag")
-public class DiaryHashtag {
+public class DiaryHashtag extends BaseInsertEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "diary_hashtag_id", nullable = false)

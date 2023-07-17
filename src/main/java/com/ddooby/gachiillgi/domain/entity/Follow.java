@@ -1,9 +1,7 @@
 package com.ddooby.gachiillgi.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.ddooby.gachiillgi.base.entity.BaseInsertEntity;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,22 +10,23 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @Entity(name = "Follow")
 @Table(name = "follow")
-public class Follow {
+public class Follow extends BaseInsertEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "follow_id", nullable = false)
     private Long id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "following_id")
-    private User followingUser;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "follow_user_id")
+    private User followUser;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "follower_id")
-    private User followerUser;
+    @JoinColumn(name = "followed_user_id")
+    private User followedUser;
 
 }
