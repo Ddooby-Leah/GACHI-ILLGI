@@ -21,12 +21,37 @@ public class Follow extends BaseInsertEntity {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "follow_user_id")
-    private User followUser;
+    @JoinColumn(name = "follower_id")
+    private User follower;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "followed_user_id")
-    private User followedUser;
+    @JoinColumn(name = "followee_id")
+    private User followee;
 
+    @Builder.Default
+    @Column(name = "is_delete")
+    private Boolean isDelete = false;
+
+    public void setFollower(User follower) {
+        if (this.follower!= null) {
+            this.follower.getFollowingList().remove(this);
+        }
+
+        this.follower = follower;
+        if (!follower.getFollowingList().contains(this)) {
+            follower.getFollowingList().add(this);
+        }
+    }
+
+    public void setFollowee(User followee) {
+        if (this.followee!= null) {
+            this.followee.getFollowerList().remove(this);
+        }
+
+        this.followee = followee;
+        if (!followee.getFollowerList().contains(this)) {
+            followee.getFollowerList().add(this);
+        }
+    }
 }

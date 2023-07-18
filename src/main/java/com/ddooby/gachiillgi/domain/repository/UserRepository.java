@@ -16,6 +16,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @EntityGraph(attributePaths = "userAuthoritySet")
     Optional<User> findOneWithUserAuthorityByUserId(Long userId);
 
-//    @Query("SELECT u FROM User u LEFT JOIN FETCH u.followerUserList WHERE u.userId = :userId")
+//    @Query("SELECT u FROM User u LEFT JOIN FETCH u.followerList WHERE u.userId = :userId")
     Optional<User> findOneWithFollowUsersByUserId(Long userId);
 }

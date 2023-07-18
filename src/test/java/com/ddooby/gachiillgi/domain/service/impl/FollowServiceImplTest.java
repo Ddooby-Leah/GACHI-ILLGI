@@ -1,10 +1,12 @@
 package com.ddooby.gachiillgi.domain.service.impl;
 
+import com.ddooby.gachiillgi.base.enums.exception.FollowErrorCodeEnum;
+import com.ddooby.gachiillgi.base.exception.BizException;
+import com.ddooby.gachiillgi.domain.entity.Follow;
 import com.ddooby.gachiillgi.domain.entity.User;
 import com.ddooby.gachiillgi.domain.repository.FollowRepository;
 import com.ddooby.gachiillgi.domain.repository.UserRepository;
 import com.ddooby.gachiillgi.domain.service.FollowService;
-import com.ddooby.gachiillgi.domain.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,9 +29,6 @@ class FollowServiceImplTest {
 
     @Autowired
     private FollowRepository followRepository;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private UserRepository userRepository;
@@ -60,12 +59,15 @@ class FollowServiceImplTest {
         );
 
         followService.followUser(user1.getUserId(), user2.getUserId());
-        assertThat(followRepository.existsByFollowUserAndFollowedUser(user1, user2)).isEqualTo(true);
+        assertThat(followRepository.existsByFollowerAndFollowee(user1, user2)).isEqualTo(true);
     }
 
     @Test
     @DisplayName("언팔로우 테스트")
     void 언팔로우_테스트() {
+
+        log.debug(String.valueOf(followRepository.findAll().size()));
+
         User user1 = userRepository.save(
                 User.builder()
                     .sex("man")
@@ -90,7 +92,11 @@ class FollowServiceImplTest {
 
         followService.followUser(user1.getUserId(), user2.getUserId());
         followService.unfollowUser(user1.getUserId(), user2.getUserId());
-        assertThat(followRepository.existsByFollowUserAndFollowedUser(user1, user2)).isEqualTo(false);
+
+        Follow follow = followRepository.findByFollowerAndFollowee(user1, user2)
+                .orElseThrow(() -> new BizException(FollowErrorCodeEnum.FOLLOW_RELATION_NOT_FOUND));
+
+        assertThat(follow.getIsDelete()).isEqualTo(true);
     }
 
     @Test
@@ -131,6 +137,7 @@ class FollowServiceImplTest {
 
         followService.followUser(follower1.getUserId(), my.getUserId());
         followService.followUser(follower2.getUserId(), my.getUserId());
+        followService.followUser(my.getUserId(), follower2.getUserId());
 
         log.debug("================================");
         assertThat(followService.getFollowers(my.getUserId()).getCount()).isEqualTo(2);

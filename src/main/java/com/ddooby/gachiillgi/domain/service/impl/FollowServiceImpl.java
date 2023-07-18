@@ -1,5 +1,6 @@
 package com.ddooby.gachiillgi.domain.service.impl;
 
+import com.ddooby.gachiillgi.base.enums.exception.FollowErrorCodeEnum;
 import com.ddooby.gachiillgi.base.enums.exception.UserErrorCodeEnum;
 import com.ddooby.gachiillgi.base.exception.BizException;
 import com.ddooby.gachiillgi.domain.entity.Follow;
@@ -26,50 +27,57 @@ public class FollowServiceImpl implements FollowService {
 
     @Override
     @Transactional
-    public void followUser(Long followUserId, Long followedUserId) {
+    public void followUser(Long followerId, Long followeeId) {
 
-        User followUser = userRepository.findById(followUserId)
+        // 팔로우하는 사람
+        User follower = userRepository.findById(followerId)
                 .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND));
 
-        User followedUser = userRepository.findById(followedUserId)
+        // 팔로우 당하는 사람
+        User followee = userRepository.findById(followeeId)
                 .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND));
 
-        followRepository.save(
-                Follow.builder()
-                        .followedUser(followedUser)
-                        .followUser(followUser)
-                        .build()
-        );
+        Follow follow = Follow.builder().follower(follower).followee(followee).build();
+
+        follow.setFollower(follower);
+        follow.setFollowee(followee);
+
+        followRepository.save(follow);
     }
 
     @Override
     @Transactional
-    public void unfollowUser(Long followUserId, Long followedUserId) {
-        User followUser = userRepository.findById(followUserId)
+    public void unfollowUser(Long followerId, Long followeeId) {
+        User follower = userRepository.findById(followerId)
                 .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND));
 
-        User followedUser = userRepository.findById(followedUserId)
+        User followee = userRepository.findById(followeeId)
                 .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND));
 
-        followRepository.deleteByFollowUserAndFollowedUser(followUser, followedUser);
+        Follow follow = followRepository.findByFollowerAndFollowee(follower, followee)
+                .orElseThrow(() -> new BizException(FollowErrorCodeEnum.FOLLOW_RELATION_NOT_FOUND));
+
+        follow.setIsDelete(true);
     }
 
     @Override
     @Transactional
     public FollowUserVOList getFollowers(Long userId) {
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findOneWithFollowUsersByUserId(userId)
                 .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND));
 
+        log.debug(user.toString());
+
         return FollowUserVOList.builder()
-                .list(followRepository.findByFollowedUser(user).stream()
+                .list(user.getFollowerList().stream()
                         .map(x -> FollowUserVO.builder()
-                                .userId(x.getFollowUser().getUserId())
-                                .name(x.getFollowUser().getName())
-                                .sex(x.getFollowUser().getSex())
-                                .nickname(x.getFollowUser().getNickname())
-                                .build())
-                        .collect(Collectors.toList())
+                        .userId(x.getFollower().getUserId())
+                        .name(x.getFollower().getName())
+                        .sex(x.getFollower().getSex())
+                        .nickname(x.getFollower().getNickname())
+                        .build())
+                    .collect(Collectors.toList())
                 )
                 .build();
     }

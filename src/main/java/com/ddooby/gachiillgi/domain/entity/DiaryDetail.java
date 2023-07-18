@@ -1,10 +1,7 @@
 package com.ddooby.gachiillgi.domain.entity;
 
 import com.ddooby.gachiillgi.base.entity.BaseUpdateEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
@@ -35,6 +32,7 @@ public class DiaryDetail extends BaseUpdateEntity {
     @JoinColumn(name = "diary_id", nullable = false)
     private Diary diary;
 
+    @Builder.Default
     @OneToMany(mappedBy = "diaryDetail")
     private List<Comment> comments = new ArrayList<>();
 

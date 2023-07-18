@@ -57,12 +57,18 @@ public class User extends BaseUpdateEntity {
     @Column(name = "profile_image", length = 100)
     private String profileImage;
 
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private Set<UserAuthority> userAuthoritySet = new HashSet<>();
 
-    @OneToMany(mappedBy = "followedUser", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Follow> followerUserList = new ArrayList<>();
+    @Builder.Default
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Follow> followingList = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "followee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Follow> followerList = new ArrayList<>();
 
     public void updateAuthority(UserAuthority userAuthority) {
         //TODO 삭제 기능

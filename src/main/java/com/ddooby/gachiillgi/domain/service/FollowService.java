@@ -10,9 +10,9 @@ import java.util.List;
 @Transactional
 public interface FollowService {
 
-    void followUser(Long followingUserId, Long followUserId);
+    void followUser(Long followerId, Long followeeId);
 
-    void unfollowUser(Long followingUserId, Long followUserId);
+    void unfollowUser(Long followerId, Long followeeId);
 
     FollowUserVOList getFollowers(Long userId);
 }
