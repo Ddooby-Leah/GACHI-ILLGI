@@ -1,4 +1,4 @@
-package com.ddooby.gachiillgi.domain.service;
+package com.ddooby.gachiillgi.domain.vo;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +10,6 @@ import lombok.Setter;
 public class FollowUserVO {
 
     private final Long userId;
-    private final String name;
     private final String nickname;
     private final String sex;
 }

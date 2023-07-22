@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRequestDTO {
+public class UserRegisterRequestDTO {
 
     @NotNull
     @Email
@@ -35,32 +35,28 @@ public class UserRequestDTO {
     @Size(min = 3, max = 10)
     private String nickname;
 
-    @NotNull
-    @Size(max = 10)
-    private String name;
-
-    @NotNull
     private String sex;
 
-    @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate birthday;
 
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
-//    private LocalDateTime registDate;
+    private String profileImageUrl;
+
+    @NotNull
+    private Boolean isOAuthUser;
+
 
     @JsonIgnore
     private Set<AuthorityResponseDTO> authorityResponseDtoSet;
 
-    public static UserRequestDTO from(User user) {
-        if(user == null) return null;
+    public static UserRegisterRequestDTO from(User user) {
+        if (user == null) return null;
 
-        return UserRequestDTO.builder()
+        return UserRegisterRequestDTO.builder()
                 .email(user.getEmail())
                 .nickname(user.getNickname())
                 .sex(user.getSex())
                 .birthday(user.getBirthday())
-                .name(user.getName())
                 .authorityResponseDtoSet(user.getUserAuthoritySet().stream()
                         .map(authority ->
                                 AuthorityResponseDTO.builder()

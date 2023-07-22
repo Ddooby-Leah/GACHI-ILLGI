@@ -3,8 +3,8 @@ package com.ddooby.gachiillgi.base.handler;
 import com.ddooby.gachiillgi.base.enums.exception.ErrorCodeEnum;
 import com.ddooby.gachiillgi.base.exception.BizException;
 import com.ddooby.gachiillgi.base.util.SecurityUtil;
-import com.ddooby.gachiillgi.domain.service.SystemLogCommand;
 import com.ddooby.gachiillgi.domain.service.SystemLogService;
+import com.ddooby.gachiillgi.domain.vo.SystemLogCommandVO;
 import com.ddooby.gachiillgi.interfaces.dto.response.DefaultErrorResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,13 +27,13 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ResponseStatus(OK)
     @ExceptionHandler(Exception.class)
-    public DefaultErrorResponseDTO defaultErrorHandler (Exception e) { //TODO 리팩토링 대상
+    public DefaultErrorResponseDTO defaultErrorHandler(Exception e) { //TODO 리팩토링 대상
 
         log.error("## Biz exception response ##");
-        log.error("{}" , e.toString());
+        log.error("{}", e.toString());
 
         systemLogService.save(
-                SystemLogCommand.builder()
+                SystemLogCommandVO.builder()
                         .level("ERROR")
                         .message(e.getMessage())
                         .createdBy(SecurityUtil.getCurrentUserEmail().isPresent()
@@ -72,7 +72,7 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
             errorShortMessage = e.getMessage();
             errorLongMessage = e.getMessage();
             return DefaultErrorResponseDTO.error(errorLongMessage, errorShortMessage);
-        }else {
+        } else {
             errorLongMessage = e.getMessage();
             errorShortMessage = "system error";
             return DefaultErrorResponseDTO.systemError(errorLongMessage, errorShortMessage);

@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
-
 import java.time.LocalDate;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -70,13 +69,13 @@ class FollowServiceImplTest {
 
         User user1 = userRepository.save(
                 User.builder()
-                    .sex("man")
-                    .email("ddoobydoobob@email.com")
-                    .password("123")
-                    .name("김뚜비")
-                    .birthday(LocalDate.of(2021, 1, 4))
-                    .nickname("ghghgh")
-                    .build()
+                        .sex("man")
+                        .email("ddoobydoobob@email.com")
+                        .password("123")
+                        .name("김뚜비")
+                        .birthday(LocalDate.of(2021, 1, 4))
+                        .nickname("ghghgh")
+                        .build()
         );
 
         User user2 = userRepository.save(

@@ -19,4 +19,6 @@ public class LoginRequestDTO {
     @NotNull
     @Size(min = 3, max = 100)
     private String password;
+
+    private boolean isKakaoUser;
 }

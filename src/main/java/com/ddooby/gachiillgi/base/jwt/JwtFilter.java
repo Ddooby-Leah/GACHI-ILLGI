@@ -57,8 +57,8 @@ public class JwtFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                     log.debug("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
                     filterChain.doFilter(httpServletRequest, httpServletResponse);
-                }
-                else {
+                } else {
+                    log.debug("Invalid Access Token, uri: {}", requestURI);
                     buildErrorDTO(httpServletResponse, UNAUTHORIZED_ACCESS, HttpServletResponse.SC_BAD_REQUEST);
                 }
             } catch (BizException e) {

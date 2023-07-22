@@ -2,8 +2,8 @@ package com.ddooby.gachiillgi.domain.service.impl;
 
 import com.ddooby.gachiillgi.domain.entity.SystemLog;
 import com.ddooby.gachiillgi.domain.repository.SystemLogRepository;
-import com.ddooby.gachiillgi.domain.service.SystemLogCommand;
 import com.ddooby.gachiillgi.domain.service.SystemLogService;
+import com.ddooby.gachiillgi.domain.vo.SystemLogCommandVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,12 +16,12 @@ public class SystemLogServiceImpl implements SystemLogService {
     private final SystemLogRepository systemLogRepository;
 
     @Override
-    public void save(SystemLogCommand systemLogCommand) {
+    public void save(SystemLogCommandVO systemLogCommandVO) {
         systemLogRepository.save(
                 SystemLog.builder()
-                        .level(systemLogCommand.getLevel())
-                        .message(systemLogCommand.getMessage())
-                        .createdBy(systemLogCommand.getCreatedBy())
+                        .level(systemLogCommandVO.getLevel())
+                        .message(systemLogCommandVO.getMessage())
+                        .createdBy(systemLogCommandVO.getCreatedBy())
                         .build()
         );
     }

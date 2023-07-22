@@ -8,13 +8,12 @@ import com.ddooby.gachiillgi.domain.entity.User;
 import com.ddooby.gachiillgi.domain.repository.FollowRepository;
 import com.ddooby.gachiillgi.domain.repository.UserRepository;
 import com.ddooby.gachiillgi.domain.service.FollowService;
-import com.ddooby.gachiillgi.domain.service.FollowUserVO;
-import com.ddooby.gachiillgi.domain.service.FollowUserVOList;
+import com.ddooby.gachiillgi.domain.vo.FollowUserVO;
+import com.ddooby.gachiillgi.domain.vo.FollowUserVOList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -26,7 +25,6 @@ public class FollowServiceImpl implements FollowService {
     private final UserRepository userRepository;
 
     @Override
-    @Transactional
     public void followUser(Long followerId, Long followeeId) {
 
         // 팔로우하는 사람
@@ -46,7 +44,6 @@ public class FollowServiceImpl implements FollowService {
     }
 
     @Override
-    @Transactional
     public void unfollowUser(Long followerId, Long followeeId) {
         User follower = userRepository.findById(followerId)
                 .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND));
@@ -61,7 +58,6 @@ public class FollowServiceImpl implements FollowService {
     }
 
     @Override
-    @Transactional
     public FollowUserVOList getFollowers(Long userId) {
 
         User user = userRepository.findOneWithFollowUsersByUserId(userId)
@@ -72,12 +68,11 @@ public class FollowServiceImpl implements FollowService {
         return FollowUserVOList.builder()
                 .list(user.getFollowerList().stream()
                         .map(x -> FollowUserVO.builder()
-                        .userId(x.getFollower().getUserId())
-                        .name(x.getFollower().getName())
-                        .sex(x.getFollower().getSex())
-                        .nickname(x.getFollower().getNickname())
-                        .build())
-                    .collect(Collectors.toList())
+                                .userId(x.getFollower().getUserId())
+                                .sex(x.getFollower().getSex())
+                                .nickname(x.getFollower().getNickname())
+                                .build())
+                        .collect(Collectors.toList())
                 )
                 .build();
     }

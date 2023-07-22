@@ -1,7 +1,7 @@
 package com.ddooby.gachiillgi.interfaces.controller;
 
 import com.ddooby.gachiillgi.domain.service.UserService;
-import com.ddooby.gachiillgi.interfaces.dto.request.UserRequestDTO;
+import com.ddooby.gachiillgi.interfaces.dto.request.UserRegisterRequestDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,13 +30,13 @@ public class UserController {
 
     @GetMapping("")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public UserRequestDTO getMyUserInfo() {
+    public UserRegisterRequestDTO getMyUserInfo() {
         return userService.getMyUserWithAuthorities();
     }
 
     @GetMapping("/{email}")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public UserRequestDTO getUserInfo(@PathVariable String email) {
+    public UserRegisterRequestDTO getUserInfo(@PathVariable String email) {
         return userService.getUserWithAuthorities(email);
     }
 }

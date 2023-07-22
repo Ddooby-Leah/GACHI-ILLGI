@@ -34,7 +34,7 @@ public class Follow extends BaseInsertEntity {
     private Boolean isDelete = false;
 
     public void setFollower(User follower) {
-        if (this.follower!= null) {
+        if (this.follower != null) {
             this.follower.getFollowingList().remove(this);
         }
 
@@ -45,7 +45,7 @@ public class Follow extends BaseInsertEntity {
     }
 
     public void setFollowee(User followee) {
-        if (this.followee!= null) {
+        if (this.followee != null) {
             this.followee.getFollowerList().remove(this);
         }
 

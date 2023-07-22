@@ -6,7 +6,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -35,27 +34,24 @@ public class User extends BaseUpdateEntity {
     @Column(name = "password", length = 100)
     private String password;
 
-    @Column(name = "nickname", length = 50)
+    @Column(name = "nickname", nullable = false, length = 50)
     private String nickname;
 
     @Column(name = "activated")
     @Enumerated(EnumType.STRING)
     private UserStatusEnum activated;
 
-    @NotNull
-    @Column(name = "name", nullable = false, length = 20)
-    private String name;
-
-    @NotNull
-    @Column(name = "sex", nullable = false, length = 10)
+    @Column(name = "sex", length = 10)
     private String sex;
 
-    @NotNull
-    @Column(name = "birthday", nullable = false)
+    @Column(name = "birthday")
     private LocalDate birthday;
 
     @Column(name = "profile_image", length = 100)
     private String profileImage;
+
+    @Column(name = "is_oauth_user")
+    private boolean isOAuthUser;
 
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

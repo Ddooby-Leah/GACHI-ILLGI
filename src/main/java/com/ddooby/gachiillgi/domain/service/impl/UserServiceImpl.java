@@ -12,16 +12,14 @@ import com.ddooby.gachiillgi.domain.entity.UserAuthority;
 import com.ddooby.gachiillgi.domain.repository.AuthorityRepository;
 import com.ddooby.gachiillgi.domain.repository.UserRepository;
 import com.ddooby.gachiillgi.domain.service.UserService;
-import com.ddooby.gachiillgi.interfaces.dto.request.UserRequestDTO;
+import com.ddooby.gachiillgi.interfaces.dto.request.UserDetailInfoRegisterRequestDTO;
+import com.ddooby.gachiillgi.interfaces.dto.request.UserRegisterRequestDTO;
+import com.ddooby.gachiillgi.interfaces.dto.response.UserRegisterResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.Column;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.time.Instant;
 import java.util.Collections;
 
 @Slf4j
@@ -33,21 +31,21 @@ public class UserServiceImpl implements UserService {
     private final AuthorityRepository authorityRepository;
 
 
-    public UserRequestDTO signup(UserRequestDTO userRequestDto) {
-        if (userRepository.findOneWithUserAuthorityByEmail(userRequestDto.getEmail()).orElse(null) != null) {
+    public UserRegisterResponseDTO signup(UserRegisterRequestDTO userRegisterRequestDto) {
+        if (userRepository.findOneWithUserAuthorityByEmail(userRegisterRequestDto.getEmail()).orElse(null) != null) {
             throw new BizException(UserErrorCodeEnum.DUPLICATE_EMAIL);
         }
 
         Authority authority = authorityRepository.findByAuthorityName(UserRoleEnum.ROLE_USER.name());
 
         User user = User.builder()
-                .email(userRequestDto.getEmail())
-                .password(passwordEncoder.encode(userRequestDto.getPassword()))
-                .nickname(userRequestDto.getNickname())
-                .name(userRequestDto.getName())
-                .sex(userRequestDto.getSex())
-                .birthday(userRequestDto.getBirthday())
+                .email(userRegisterRequestDto.getEmail())
+                .password(passwordEncoder.encode(userRegisterRequestDto.getPassword()))
+                .nickname(userRegisterRequestDto.getNickname())
+                .sex(userRegisterRequestDto.getSex())
+                .birthday(userRegisterRequestDto.getBirthday())
                 .activated(UserStatusEnum.PENDING)
+                .isOAuthUser(userRegisterRequestDto.getIsOAuthUser())
                 .build();
 
         user.setUserAuthoritySet(
@@ -57,9 +55,25 @@ public class UserServiceImpl implements UserService {
                         .build())
         );
 
-        return UserRequestDTO.from(
+        return UserRegisterResponseDTO.from(
                 userRepository.save(user)
         );
+    }
+
+    @Override
+    public UserRegisterResponseDTO signupWithDetail(UserDetailInfoRegisterRequestDTO requestDTO) {
+        User tempUserInfo = userRepository.findByEmail(requestDTO.getEmail())
+                .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND));
+
+        if (tempUserInfo.getActivated() == UserStatusEnum.ACTIVATED) {
+            throw new BizException(AuthErrorCodeEnum.ALREADY_COMPLETE_ADD_DETAIL);
+        }
+        tempUserInfo.setNickname(requestDTO.getNickname());
+        tempUserInfo.setBirthday(requestDTO.getBirthday());
+        tempUserInfo.setSex(requestDTO.getSex());
+        tempUserInfo.setActivated(UserStatusEnum.ACTIVATED);
+
+        return UserRegisterResponseDTO.from(tempUserInfo);
     }
 
     @Override
@@ -68,21 +82,28 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND));
 
         if (user.getActivated() == UserStatusEnum.ACTIVATED) {
-            throw new BizException(AuthErrorCodeEnum.ALEADY_COMPLETE_VERIFICATION);
+            throw new BizException(AuthErrorCodeEnum.ALREADY_COMPLETE_VERIFICATION);
         } else {
             user.setActivated(UserStatusEnum.ACTIVATED);
         }
     }
 
-    public UserRequestDTO getUserWithAuthorities(String email) {
-        return UserRequestDTO.from(userRepository.findOneWithUserAuthorityByEmail(email).orElse(null));
+    @Override
+    public UserRegisterRequestDTO getUserWithAuthorities(String email) {
+        return UserRegisterRequestDTO.from(userRepository.findOneWithUserAuthorityByEmail(email).orElse(null));
     }
 
-    public UserRequestDTO getMyUserWithAuthorities() {
-        return UserRequestDTO.from(
+    @Override
+    public UserRegisterRequestDTO getMyUserWithAuthorities() {
+        return UserRegisterRequestDTO.from(
                 SecurityUtil.getCurrentUserEmail()
                         .flatMap(userRepository::findOneWithUserAuthorityByEmail)
                         .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND))
         );
+    }
+
+    @Override
+    public boolean isUser(String email) {
+        return userRepository.existsByEmail(email);
     }
 }

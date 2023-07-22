@@ -16,7 +16,7 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     boolean existsByFollowerAndFollowee(User follower, User followee);
 
-//    @Query("SELECT f FROM Follow f LEFT JOIN FETCH f.followedUser WHERE f.followedUser = :followedUser")
+    //    @Query("SELECT f FROM Follow f LEFT JOIN FETCH f.followedUser WHERE f.followedUser = :followedUser")
     List<Follow> findByFollowee(User followedUser);
 
 

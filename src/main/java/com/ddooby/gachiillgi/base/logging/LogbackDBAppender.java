@@ -3,10 +3,9 @@ package com.ddooby.gachiillgi.base.logging;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
 import com.ddooby.gachiillgi.base.util.SecurityUtil;
-import com.ddooby.gachiillgi.domain.service.SystemLogCommand;
 import com.ddooby.gachiillgi.domain.service.SystemLogService;
+import com.ddooby.gachiillgi.domain.vo.SystemLogCommandVO;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -21,7 +20,7 @@ public class LogbackDBAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
     @Override
     protected void append(ILoggingEvent eventObject) {
         systemLogService.save(
-                SystemLogCommand.builder()
+                SystemLogCommandVO.builder()
                         .level(eventObject.getLevel().toString())
                         .message(eventObject.getFormattedMessage())
                         .createdBy(SecurityUtil.getCurrentUserEmail().isPresent()

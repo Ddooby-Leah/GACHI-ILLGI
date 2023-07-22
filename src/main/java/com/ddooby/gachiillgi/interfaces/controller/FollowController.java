@@ -1,7 +1,8 @@
 package com.ddooby.gachiillgi.interfaces.controller;
 
 import com.ddooby.gachiillgi.domain.service.FollowService;
-import com.ddooby.gachiillgi.domain.service.FollowUserVOList;
+import com.ddooby.gachiillgi.domain.vo.FollowUserVOList;
+import com.ddooby.gachiillgi.interfaces.dto.request.FollowRequestDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;

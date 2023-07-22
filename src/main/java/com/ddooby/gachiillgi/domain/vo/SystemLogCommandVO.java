@@ -1,11 +1,11 @@
-package com.ddooby.gachiillgi.domain.service;
+package com.ddooby.gachiillgi.domain.vo;
 
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-public class SystemLogCommand {
+public class SystemLogCommandVO {
     private String level;
     private String message;
     private String createdBy;
