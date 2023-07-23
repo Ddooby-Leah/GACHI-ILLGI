@@ -2,8 +2,12 @@ package com.ddooby.gachiillgi.base.util;
 
 import com.ddooby.gachiillgi.base.enums.exception.CommonErrorCodeEnum;
 import com.ddooby.gachiillgi.base.exception.BizException;
+import com.ddooby.gachiillgi.interfaces.dto.response.DefaultResponseDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -15,9 +19,12 @@ import java.net.URISyntaxException;
 
 import static com.ddooby.gachiillgi.base.enums.TokenEnum.TOKEN_COOKIE_HEADER;
 
-
+@Slf4j
 public class CommonUtil {
-    public static final ObjectMapper objectMapper = new ObjectMapper();
+
+    private static ObjectMapper objectMapper = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
     @Value("${jwt.token-validity-in-seconds}")
     private static String TOKEN_EXPIRE_TIME;
@@ -30,7 +37,17 @@ public class CommonUtil {
         }
     }
 
+    public static DefaultResponseDTO objectToDefaultResponseDTO(Object object) {
+        try {
+            return DefaultResponseDTO.create(object);
+        } catch (Exception e) {
+            log.debug(e.getMessage());
+            throw new BizException(CommonErrorCodeEnum.JSON_MARSHALLING_ERROR);
+        }
+    }
+
     public static URI convertStringToUri(String string) {
+        log.debug(objectMapper.toString());
         try {
             return new URI(string);
         } catch (URISyntaxException e) {

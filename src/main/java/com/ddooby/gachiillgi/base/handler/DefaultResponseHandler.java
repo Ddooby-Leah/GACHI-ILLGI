@@ -1,7 +1,7 @@
 package com.ddooby.gachiillgi.base.handler;
 
+import com.ddooby.gachiillgi.base.util.CommonUtil;
 import com.ddooby.gachiillgi.interfaces.dto.response.DefaultErrorResponseDTO;
-import com.ddooby.gachiillgi.interfaces.dto.response.DefaultResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
@@ -36,11 +36,11 @@ public class DefaultResponseHandler implements ResponseBodyAdvice<Object> {
             if (body instanceof DefaultErrorResponseDTO) {
                 return body;
             } else {
-                return DefaultResponseDTO.builder().contents(body).build();
+                return CommonUtil.objectToDefaultResponseDTO(body);
             }
         } else if (selectedContentType.isCompatibleWith(MediaType.TEXT_PLAIN)) {
             response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
-            return DefaultResponseDTO.builder().contents(body).build();
+            return CommonUtil.objectToDefaultResponseDTO(body);
         } else {
             return body;
         }

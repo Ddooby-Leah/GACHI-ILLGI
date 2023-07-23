@@ -25,10 +25,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -72,7 +72,7 @@ public class AuthController {
 
     @PostMapping("/send-mail")
 
-    public String sendVerificationMail(@RequestBody MailSendRequestDTO mailSendRequestDTO) { // FIXME 코드 너무 더럽;
+    public String sendVerificationMail(@RequestBody MailSendRequestDTO mailSendRequestDTO, HttpServletRequest request) { // FIXME 코드 너무 더럽;
 
         String email = mailSendRequestDTO.getEmail();
         String username = mailSendRequestDTO.getNickname();
@@ -87,6 +87,8 @@ public class AuthController {
         variables.put("link", "http://localhost:8080/api/auth/verify-mail/?link=" + temporaryLink);
         variables.put("location", "https://가치일기.com");
         mailService.send(subject, variables, mailSendRequestDTO.getEmail());
+
+        log.debug(request.toString());
 
         return "인증 메일 전송 완료";
     }
