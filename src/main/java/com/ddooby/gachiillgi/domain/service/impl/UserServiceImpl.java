@@ -17,11 +17,11 @@ import com.ddooby.gachiillgi.interfaces.dto.request.UserRegisterRequestDTO;
 import com.ddooby.gachiillgi.interfaces.dto.response.UserRegisterResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -34,32 +34,44 @@ public class UserServiceImpl implements UserService {
 
 
     public UserRegisterResponseDTO signup(UserRegisterRequestDTO userRegisterRequestDto) {
-        if (userRepository.findOneWithUserAuthorityByEmail(userRegisterRequestDto.getEmail()).orElse(null) != null) {
-            throw new BizException(UserErrorCodeEnum.DUPLICATE_EMAIL);
+        User findUser = userRepository.findByEmail(userRegisterRequestDto.getEmail())
+                .orElse(null);
+
+        if (Objects.nonNull(findUser)) {
+
+            if (findUser.isNotOAuthUser()) {
+                throw new BizException(UserErrorCodeEnum.DUPLICATE_EMAIL);
+            } else {
+                return UserRegisterResponseDTO.from(findUser);
+            }
+
+        } else {
+
+            Authority authority = authorityRepository.findByAuthorityName(UserRoleEnum.ROLE_USER.name());
+
+            User user = User.builder()
+                    .email(userRegisterRequestDto.getEmail())
+                    .password(passwordEncoder.encode(userRegisterRequestDto.getPassword()))
+                    .nickname(userRegisterRequestDto.getNickname())
+                    .sex(userRegisterRequestDto.getSex())
+                    .birthday(userRegisterRequestDto.getBirthday())
+                    .activated(UserStatusEnum.PENDING)
+                    .isOAuthUser(userRegisterRequestDto.getIsOAuthUser())
+                    .build();
+
+            user.setUserAuthoritySet(
+                    Collections.singleton(UserAuthority.builder()
+                            .user(user)
+                            .authority(authority)
+                            .build())
+            );
+
+            return UserRegisterResponseDTO.from(userRepository.save(user));
         }
+    }
 
-        Authority authority = authorityRepository.findByAuthorityName(UserRoleEnum.ROLE_USER.name());
-
-        User user = User.builder()
-                .email(userRegisterRequestDto.getEmail())
-                .password(passwordEncoder.encode(userRegisterRequestDto.getPassword()))
-                .nickname(userRegisterRequestDto.getNickname())
-                .sex(userRegisterRequestDto.getSex())
-                .birthday(userRegisterRequestDto.getBirthday())
-                .activated(UserStatusEnum.PENDING)
-                .isOAuthUser(userRegisterRequestDto.getIsOAuthUser())
-                .build();
-
-        user.setUserAuthoritySet(
-                Collections.singleton(UserAuthority.builder()
-                        .user(user)
-                        .authority(authority)
-                        .build())
-        );
-
-        return UserRegisterResponseDTO.from(
-                userRepository.save(user)
-        );
+    private boolean isExistsUser(UserRegisterRequestDTO userRegisterRequestDto) {
+        return userRepository.findByEmail(userRegisterRequestDto.getEmail()).isPresent();
     }
 
     @Override
@@ -107,10 +119,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isUser(String email) {
         Optional<User> user = userRepository.findByEmail(email);
-        return user.isPresent() && isActivatedUser(user.get());
+        return user.isPresent() && user.get().isActivatedUser();
     }
 
-    private boolean isActivatedUser(User user) {
-        return user.getActivated() == UserStatusEnum.ACTIVATED;
-    }
 }

@@ -27,6 +27,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -119,7 +120,6 @@ public class AuthController {
     public RedirectView loginByKakao(@RequestParam("code") String authorizationCode,
                                      @RequestParam(value = "error", required = false) String errorCode,
                                      @RequestParam(value = "error_description", required = false) String errorDescription,
-                                     RedirectAttributes redirectAttributes,
                                      HttpServletResponse httpServletResponse) {
 
         if (StringUtils.hasText(errorCode) || StringUtils.hasText(errorDescription)) {
@@ -141,10 +141,14 @@ public class AuthController {
             CommonUtil.addAuthCookie(token, httpServletResponse);
 
             return new RedirectView("http://localhost:3000");
+
         } else {
             userService.signup(kakaoUserInfo.toUserRegisterRequestDTO());
-            redirectAttributes.addAttribute("email", userEmail);
-            return new RedirectView("http://localhost:3000/join/agree");
+            return new RedirectView(
+                    UriComponentsBuilder.fromHttpUrl("http://localhost:3000")
+                            .path("/join/agree")
+                            .queryParam("email", userEmail)
+                            .toUriString());
         }
     }
 }

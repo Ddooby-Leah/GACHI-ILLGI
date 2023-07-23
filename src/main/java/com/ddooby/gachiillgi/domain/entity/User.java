@@ -71,4 +71,12 @@ public class User extends BaseUpdateEntity {
         userAuthoritySet.add(userAuthority);
         userAuthority.setUser(this);
     }
+
+    public boolean isActivatedUser() {
+        return this.getActivated() == UserStatusEnum.ACTIVATED;
+    }
+
+    public boolean isNotOAuthUser() {
+        return !this.isOAuthUser();
+    }
 }
