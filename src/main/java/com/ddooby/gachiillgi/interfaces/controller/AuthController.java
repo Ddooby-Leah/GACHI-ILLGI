@@ -96,7 +96,7 @@ public class AuthController {
         String email = tokenProvider.verifyTemporaryLink(link);
         if (email != null) {
             userService.updateActivated(email);
-            return new RedirectView("https://google.com");
+            return new RedirectView("http://localhost:3000");
         } else {
             return new RedirectView("/error");
         }
