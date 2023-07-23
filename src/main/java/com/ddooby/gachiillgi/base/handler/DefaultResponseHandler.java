@@ -1,9 +1,7 @@
 package com.ddooby.gachiillgi.base.handler;
 
-import com.ddooby.gachiillgi.base.util.CommonUtil;
 import com.ddooby.gachiillgi.interfaces.dto.response.DefaultErrorResponseDTO;
 import com.ddooby.gachiillgi.interfaces.dto.response.DefaultResponseDTO;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
