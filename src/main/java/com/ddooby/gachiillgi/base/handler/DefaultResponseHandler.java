@@ -21,8 +21,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 })
 public class DefaultResponseHandler implements ResponseBodyAdvice<Object> {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
         return true;
@@ -44,7 +42,7 @@ public class DefaultResponseHandler implements ResponseBodyAdvice<Object> {
             }
         } else if (selectedContentType.isCompatibleWith(MediaType.TEXT_PLAIN)) {
             response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
-                return CommonUtil.ObjectToJsonString(DefaultResponseDTO.builder().contents(body).build());
+            return DefaultResponseDTO.builder().contents(body).build();
         } else {
             return body;
         }
