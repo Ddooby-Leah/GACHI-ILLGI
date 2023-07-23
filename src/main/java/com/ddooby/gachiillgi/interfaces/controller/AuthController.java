@@ -76,7 +76,7 @@ public class AuthController {
 
         String email = mailSendRequestDTO.getEmail();
         String username = mailSendRequestDTO.getNickname();
-        String temporaryLink = tokenProvider.createTemporaryLink(mailSendRequestDTO.getNickname());
+        String temporaryLink = tokenProvider.createTemporaryLink(mailSendRequestDTO.getEmail());
 
         //TODO 유저 검증이 필요할까?
 

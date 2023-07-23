@@ -1,4 +1,4 @@
-package com.ddooby.gachiillgi.config;
+package com.ddooby.gachiillgi.base.config;
 
 import com.ddooby.gachiillgi.base.enums.PermitPathEnum;
 import com.ddooby.gachiillgi.base.jwt.JwtAccessDeniedHandler;

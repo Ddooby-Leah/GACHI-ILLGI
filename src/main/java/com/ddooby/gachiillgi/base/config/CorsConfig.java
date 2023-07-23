@@ -1,4 +1,4 @@
-package com.ddooby.gachiillgi.config;
+package com.ddooby.gachiillgi.base.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

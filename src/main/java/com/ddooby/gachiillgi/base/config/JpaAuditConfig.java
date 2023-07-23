@@ -1,4 +1,4 @@
-package com.ddooby.gachiillgi.config;
+package com.ddooby.gachiillgi.base.config;
 
 import com.ddooby.gachiillgi.base.util.SecurityUtil;
 import org.springframework.context.annotation.Bean;

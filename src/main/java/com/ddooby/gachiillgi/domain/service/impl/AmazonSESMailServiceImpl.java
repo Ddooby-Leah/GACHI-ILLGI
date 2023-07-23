@@ -9,6 +9,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Map;
 
 @Service
@@ -31,8 +32,9 @@ public class AmazonSESMailServiceImpl implements MailService {
 
     @Override
     public void send(String subject, Map<String, Object> variables, String... to) {
+        //todo
+        //pending 상태인 사용자 인지 아닌지 확인하는 검증 로직 필요
         String content = htmlTemplateEngine.process("index", createContext(variables));
-
         SendEmailRequest sendEmailRequest = createSendEmailRequest(subject, content, to);
 
         amazonSimpleEmailService.sendEmail(sendEmailRequest);

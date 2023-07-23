@@ -2,19 +2,21 @@ package com.ddooby.gachiillgi.interfaces.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 public class DefaultErrorResponseDTO {
 
-    private int code = -1;
+    private int code;
     private String longMessage;
     private String shortMessage;
     private String errorCode;
 
     private DefaultErrorResponseDTO() {}
 
-    public static DefaultErrorResponseDTO systemError (String longMessage , String shortMessage) {
+    public static DefaultErrorResponseDTO systemError (String longMessage, String shortMessage) {
         DefaultErrorResponseDTO defaultErrorResponseDTO = new DefaultErrorResponseDTO();
         defaultErrorResponseDTO.code = -2;
         defaultErrorResponseDTO.errorCode = "";
@@ -23,7 +25,7 @@ public class DefaultErrorResponseDTO {
         return defaultErrorResponseDTO;
     }
 
-    public static DefaultErrorResponseDTO error (String errorCode , String longMessage , String shortMessage) {
+    public static DefaultErrorResponseDTO error (String errorCode , String longMessage, String shortMessage) {
         DefaultErrorResponseDTO defaultErrorResponseDTO = new DefaultErrorResponseDTO();
         defaultErrorResponseDTO.code = -1;
         defaultErrorResponseDTO.errorCode = errorCode;
@@ -32,7 +34,7 @@ public class DefaultErrorResponseDTO {
         return defaultErrorResponseDTO;
     }
 
-    public static DefaultErrorResponseDTO error (String longMessage , String shortMessage) {
+    public static DefaultErrorResponseDTO error (String longMessage, String shortMessage) {
         DefaultErrorResponseDTO defaultErrorResponseDTO = new DefaultErrorResponseDTO();
         defaultErrorResponseDTO.code = -1;
         defaultErrorResponseDTO.errorCode = "";

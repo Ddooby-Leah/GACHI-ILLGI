@@ -50,6 +50,7 @@ public class UserRegisterResponseDTO {
                                         .authorityName(authority.getAuthority().getAuthorityName())
                                         .build())
                         .collect(Collectors.toSet()))
+                .isOAuthUser(user.isOAuthUser())
                 .createAt(user.getCreatedAt())
                 .build();
     }
