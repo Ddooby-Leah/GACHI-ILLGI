@@ -17,10 +17,12 @@ import com.ddooby.gachiillgi.interfaces.dto.request.UserRegisterRequestDTO;
 import com.ddooby.gachiillgi.interfaces.dto.response.UserRegisterResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -104,6 +106,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isUser(String email) {
-        return userRepository.existsByEmail(email);
+        Optional<User> user = userRepository.findByEmail(email);
+        return user.isPresent() && isActivatedUser(user.get());
+    }
+
+    private boolean isActivatedUser(User user) {
+        return user.getActivated() == UserStatusEnum.ACTIVATED;
     }
 }

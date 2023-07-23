@@ -140,11 +140,11 @@ public class AuthController {
             String token = tokenProvider.createToken(authentication);
             CommonUtil.addAuthCookie(token, httpServletResponse);
 
-            return new RedirectView("http://locahost:3000/main");
+            return new RedirectView("http://localhost:3000");
         } else {
             userService.signup(kakaoUserInfo.toUserRegisterRequestDTO());
             redirectAttributes.addAttribute("email", userEmail);
-            return new RedirectView("http://localhost:3000/add-info");
+            return new RedirectView("http://localhost:3000/join/agree");
         }
     }
 }
