@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -25,9 +26,6 @@ public class CommonUtil {
     private static ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
-    @Value("${jwt.token-validity-in-seconds}")
-    private static String TOKEN_EXPIRE_TIME;
 
     public static String ObjectToJsonString(Object object) {
         try {
@@ -55,12 +53,12 @@ public class CommonUtil {
         }
     }
 
-    public static HttpHeaders buildAuthCookie(String token) {
+    public static HttpHeaders buildAuthCookie(String token, Long maxAge) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(
                 HttpHeaders.SET_COOKIE,
                 ResponseCookie.from(TOKEN_COOKIE_HEADER.getName(), token)
-                        .maxAge(Long.parseLong(TOKEN_EXPIRE_TIME))
+                        .maxAge(maxAge)
                         .secure(true)
 //                        .httpOnly(true)
                         .path("/")
@@ -70,9 +68,9 @@ public class CommonUtil {
         return httpHeaders;
     }
 
-    public static void addAuthCookie(String token, HttpServletResponse httpServletResponse) {
+    public static void addAuthCookie(String token, int maxAge, HttpServletResponse httpServletResponse) {
         Cookie authCookie = new Cookie(TOKEN_COOKIE_HEADER.getName(), token);
-        authCookie.setMaxAge(Integer.parseInt(TOKEN_EXPIRE_TIME));
+        authCookie.setMaxAge(maxAge);
         authCookie.setSecure(true);
         authCookie.setPath("/");
         authCookie.setHttpOnly(false);

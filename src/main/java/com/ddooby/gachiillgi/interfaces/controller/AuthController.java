@@ -38,6 +38,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+
+    private final String tokenExpireTime;
     private final String logoutRedirectUrl;
     private final UserService userService;
     private final MailService mailService;
@@ -45,13 +47,15 @@ public class AuthController {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    public AuthController(@Value("${redirect-url.home}") String logoutRedirectUrl,
+    public AuthController(@Value("${jwt.token-validity-in-seconds}") String tokenExpireTime,
+                          @Value("${redirect-url.home}") String logoutRedirectUrl,
                           UserService userService,
                           MailService mailService,
                           @Qualifier("kakaoOAuthServiceImpl") OAuthService kakaoOAuthService,
                           TokenProvider tokenProvider,
                           AuthenticationManagerBuilder authenticationManagerBuilder) {
 
+        this.tokenExpireTime = tokenExpireTime;
         this.logoutRedirectUrl = logoutRedirectUrl;
         this.userService = userService;
         this.mailService = mailService;
@@ -115,7 +119,11 @@ public class AuthController {
 
         String token = tokenProvider.createToken(authentication);
 
-        return new ResponseEntity<>(new TokenResponseDTO(token), CommonUtil.buildAuthCookie(token), HttpStatus.OK);
+        return new ResponseEntity<>(
+                new TokenResponseDTO(token),
+                CommonUtil.buildAuthCookie(token, Long.parseLong(tokenExpireTime)),
+                HttpStatus.OK
+        );
     }
 
     @GetMapping(value = "/kakao-login")
@@ -140,7 +148,7 @@ public class AuthController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             String token = tokenProvider.createToken(authentication);
-            CommonUtil.addAuthCookie(token, httpServletResponse);
+            CommonUtil.addAuthCookie(token, Integer.parseInt(tokenExpireTime), httpServletResponse);
 
             return new RedirectView("http://localhost:3000");
 
