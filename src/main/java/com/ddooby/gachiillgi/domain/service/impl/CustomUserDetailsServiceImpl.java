@@ -29,11 +29,11 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(final String email) {
         return userRepository.findOneWithUserAuthorityByEmail(email)
-                .map(user -> createUser(email, user))
-                .orElseThrow(() -> new UsernameNotFoundException(email + " -> 데이터베이스에서 찾을 수 없습니다."));
+                .map(this::createUser)
+                .orElseThrow(() -> new UsernameNotFoundException(email + " -> 데이터베이스에서 해당 이메일을 찾을 수 없습니다."));
     }
 
-    private org.springframework.security.core.userdetails.User createUser(String username, User user) {
+    private org.springframework.security.core.userdetails.User createUser(User user) {
         if (user.getActivated() != UserStatusEnum.ACTIVATED) {
             throw new BizException(AuthErrorCodeEnum.MUST_MAIL_VERIFICATION);
         }
@@ -41,9 +41,6 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
         List<GrantedAuthority> grantedAuthorities = user.getUserAuthoritySet().stream()
                 .map(userAuthority -> new SimpleGrantedAuthority(userAuthority.getAuthority().getAuthorityName()))
                 .collect(Collectors.toList());
-
-        log.debug(user.toString());
-        log.debug(grantedAuthorities.toString());
 
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
