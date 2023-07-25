@@ -109,7 +109,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponseDTO> authorize(@Valid @RequestBody LoginRequestDTO loginRequestDto) {
+    public RedirectView authorize(@Valid @RequestBody LoginRequestDTO loginRequestDto,
+                                                      HttpServletResponse httpServletResponse) {
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword());
@@ -118,12 +119,9 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = tokenProvider.createToken(authentication);
+        CommonUtil.addAuthCookie(token, Integer.parseInt(tokenExpireTime), httpServletResponse);
 
-        return new ResponseEntity<>(
-                new TokenResponseDTO(token),
-                CommonUtil.buildAuthCookie(token, Long.parseLong(tokenExpireTime)),
-                HttpStatus.OK
-        );
+        return new RedirectView("http://localhost:3000");
     }
 
     @GetMapping(value = "/kakao-login")
