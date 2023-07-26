@@ -6,10 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 public interface FollowService {
 
     @Transactional
-    void followUser(Long followerId, Long followeeId);
+    void followUser(String followerEmail, String follweeEmail);
 
     @Transactional
-    void unfollowUser(Long followerId, Long followeeId);
+    void unfollowUser(String followerEmail, String follweeEmail);
 
     @Transactional
     FollowUserVOList getFollowers(Long userId);

@@ -103,13 +103,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserRegisterRequestDTO getUserWithAuthorities(String email) {
-        return UserRegisterRequestDTO.from(userRepository.findOneWithUserAuthorityByEmail(email).orElse(null));
+    public UserRegisterResponseDTO getUserWithAuthorities(String email) {
+        return UserRegisterResponseDTO.from(userRepository.findOneWithUserAuthorityByEmail(email).orElse(null));
     }
 
     @Override
-    public UserRegisterRequestDTO getMyUserWithAuthorities() {
-        return UserRegisterRequestDTO.from(
+    public UserRegisterResponseDTO getMyUserWithAuthorities() {
+        return UserRegisterResponseDTO.from(
                 SecurityUtil.getCurrentUserEmail()
                         .flatMap(userRepository::findOneWithUserAuthorityByEmail)
                         .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND))

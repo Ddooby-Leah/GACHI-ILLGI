@@ -19,13 +19,13 @@ public class FollowController {
     @PostMapping("")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public void followUser(@RequestBody FollowRequestDTO followRequestDTO) {
-        followService.followUser(followRequestDTO.getFollowerId(), followRequestDTO.getFolloweeId());
+        followService.followUser(followRequestDTO.getFollowerEmail(), followRequestDTO.getFolloweeEmail());
     }
 
     @DeleteMapping("")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public void unfollowUser(@RequestBody FollowRequestDTO followRequestDTO) {
-        followService.unfollowUser(followRequestDTO.getFollowerId(), followRequestDTO.getFolloweeId());
+        followService.unfollowUser(followRequestDTO.getFollowerEmail(), followRequestDTO.getFolloweeEmail());
     }
 
     @GetMapping("")

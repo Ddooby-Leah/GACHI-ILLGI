@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @Builder
 public class FollowRequestDTO {
-    private final Long followerId;
-    private final Long followeeId;
+    private final String followerEmail;
+    private final String followeeEmail;
 }

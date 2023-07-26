@@ -17,10 +17,10 @@ public interface UserService {
     void updateActivated(String email);
 
     @Transactional(readOnly = true)
-    UserRegisterRequestDTO getUserWithAuthorities(String email);
+    UserRegisterResponseDTO getUserWithAuthorities(String email);
 
     @Transactional(readOnly = true)
-    UserRegisterRequestDTO getMyUserWithAuthorities();
+    UserRegisterResponseDTO getMyUserWithAuthorities();
 
     @Transactional(readOnly = true)
     boolean isUser(String email);

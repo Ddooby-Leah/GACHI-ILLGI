@@ -25,14 +25,14 @@ public class FollowServiceImpl implements FollowService {
     private final UserRepository userRepository;
 
     @Override
-    public void followUser(Long followerId, Long followeeId) {
+    public void followUser(String followerEmail, String follweeEmail) {
 
         // 팔로우하는 사람
-        User follower = userRepository.findById(followerId)
+        User follower = userRepository.findByEmail(followerEmail)
                 .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND));
 
         // 팔로우 당하는 사람
-        User followee = userRepository.findById(followeeId)
+        User followee = userRepository.findByEmail(follweeEmail)
                 .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND));
 
         Follow follow = Follow.builder().follower(follower).followee(followee).build();
@@ -44,11 +44,11 @@ public class FollowServiceImpl implements FollowService {
     }
 
     @Override
-    public void unfollowUser(Long followerId, Long followeeId) {
-        User follower = userRepository.findById(followerId)
+    public void unfollowUser(String followerEmail, String follweeEmail) {
+        User follower = userRepository.findByEmail(followerEmail)
                 .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND));
 
-        User followee = userRepository.findById(followeeId)
+        User followee = userRepository.findByEmail(follweeEmail)
                 .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND));
 
         Follow follow = followRepository.findByFollowerAndFollowee(follower, followee)
