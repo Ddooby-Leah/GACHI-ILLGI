@@ -1,7 +1,11 @@
 package com.ddooby.gachiillgi.domain.entity;
 
 import com.ddooby.gachiillgi.base.entity.BaseUpdateEntity;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -9,7 +13,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
