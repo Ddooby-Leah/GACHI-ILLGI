@@ -10,6 +10,7 @@ import com.ddooby.gachiillgi.domain.repository.UserRepository;
 import com.ddooby.gachiillgi.domain.service.FollowService;
 import com.ddooby.gachiillgi.domain.vo.FollowUserVO;
 import com.ddooby.gachiillgi.domain.vo.FollowUserVOList;
+import com.ddooby.gachiillgi.interfaces.dto.response.FollowResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class FollowServiceImpl implements FollowService {
     private final UserRepository userRepository;
 
     @Override
-    public void followUser(String followerEmail, String follweeEmail) {
+    public FollowResponseDTO followUser(String followerEmail, String follweeEmail) {
 
         // 팔로우하는 사람
         User follower = userRepository.findByEmail(followerEmail)
@@ -35,16 +36,19 @@ public class FollowServiceImpl implements FollowService {
         User followee = userRepository.findByEmail(follweeEmail)
                 .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND));
 
-        Follow follow = Follow.builder().follower(follower).followee(followee).build();
-
+        Follow follow = new Follow();
         follow.setFollower(follower);
         follow.setFollowee(followee);
 
-        followRepository.save(follow);
+        Long id = followRepository.save(follow).getId();
+
+        return FollowResponseDTO.builder()
+                .id(id)
+                .build();
     }
 
     @Override
-    public void unfollowUser(String followerEmail, String follweeEmail) {
+    public FollowResponseDTO unfollowUser(String followerEmail, String follweeEmail) {
         User follower = userRepository.findByEmail(followerEmail)
                 .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND));
 
@@ -55,12 +59,16 @@ public class FollowServiceImpl implements FollowService {
                 .orElseThrow(() -> new BizException(FollowErrorCodeEnum.FOLLOW_RELATION_NOT_FOUND));
 
         follow.setIsDelete(true);
+
+        return FollowResponseDTO.builder()
+                .id(follow.getId())
+                .build();
     }
 
     @Override
-    public FollowUserVOList getFollowers(Long userId) {
+    public FollowUserVOList getFollowers(String userEmail) {
 
-        User user = userRepository.findOneWithFollowUsersByUserId(userId)
+        User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND));
 
         log.debug(user.toString());
@@ -68,7 +76,7 @@ public class FollowServiceImpl implements FollowService {
         return FollowUserVOList.builder()
                 .list(user.getFollowerList().stream()
                         .map(x -> FollowUserVO.builder()
-                                .userId(x.getFollower().getUserId())
+                                .email(x.getFollower().getEmail())
                                 .sex(x.getFollower().getSex())
                                 .nickname(x.getFollower().getNickname())
                                 .build())

@@ -8,5 +8,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FollowResponseDTO {
-    private final boolean status;
+    private final Long id;
 }

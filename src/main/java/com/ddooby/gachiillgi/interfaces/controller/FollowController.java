@@ -3,6 +3,7 @@ package com.ddooby.gachiillgi.interfaces.controller;
 import com.ddooby.gachiillgi.domain.service.FollowService;
 import com.ddooby.gachiillgi.domain.vo.FollowUserVOList;
 import com.ddooby.gachiillgi.interfaces.dto.request.FollowRequestDTO;
+import com.ddooby.gachiillgi.interfaces.dto.response.FollowResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,19 +19,19 @@ public class FollowController {
 
     @PostMapping("")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public void followUser(@RequestBody FollowRequestDTO followRequestDTO) {
-        followService.followUser(followRequestDTO.getFollowerEmail(), followRequestDTO.getFolloweeEmail());
+    public FollowResponseDTO followUser(@RequestBody FollowRequestDTO followRequestDTO) {
+        return followService.followUser(followRequestDTO.getFollowerEmail(), followRequestDTO.getFolloweeEmail());
     }
 
     @DeleteMapping("")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public void unfollowUser(@RequestBody FollowRequestDTO followRequestDTO) {
-        followService.unfollowUser(followRequestDTO.getFollowerEmail(), followRequestDTO.getFolloweeEmail());
+    public FollowResponseDTO unfollowUser(@RequestBody FollowRequestDTO followRequestDTO) {
+        return followService.unfollowUser(followRequestDTO.getFollowerEmail(), followRequestDTO.getFolloweeEmail());
     }
 
     @GetMapping("")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public FollowUserVOList getMyFollowUser(@RequestParam Long userId) {
-        return followService.getFollowers(userId);
+    public FollowUserVOList getMyFollowUser(@RequestParam String userEmail) {
+        return followService.getFollowers(userEmail);
     }
 }

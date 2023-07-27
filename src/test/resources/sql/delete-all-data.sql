@@ -1,0 +1,4 @@
+DELETE
+FROM follow;
+DELETE
+FROM users;
