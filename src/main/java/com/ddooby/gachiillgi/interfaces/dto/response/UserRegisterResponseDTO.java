@@ -19,8 +19,6 @@ public class UserRegisterResponseDTO {
 
     private String email;
 
-    private String password;
-
     private String nickname;
 
     private String sex;

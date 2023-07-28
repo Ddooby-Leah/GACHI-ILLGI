@@ -27,6 +27,7 @@ public class KakaoProfileResponseDTO {
 
     @Getter
     @ToString
+    @Builder
     @AllArgsConstructor
     public static class Properties { //(1)
         private final String nickname;
@@ -40,6 +41,7 @@ public class KakaoProfileResponseDTO {
 
     @Getter
     @ToString
+    @Builder
     @AllArgsConstructor
     public static class KakaoAccount { //(2)
         @JsonProperty("profile_nickname_needs_agreement")
@@ -68,6 +70,7 @@ public class KakaoProfileResponseDTO {
 
         @Getter
         @ToString
+        @Builder
         @AllArgsConstructor
         public static class Profile {
 

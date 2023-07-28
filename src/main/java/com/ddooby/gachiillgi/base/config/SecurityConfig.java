@@ -55,10 +55,8 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .requestMatchers(PermitPathEnum.getPermitUriList())
-                        .permitAll()
-                        .requestMatchers(PathRequest.toH2Console())
-                        .permitAll()
+                        .requestMatchers(PermitPathEnum.getPermitUriList()).permitAll()
+                        .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .anyRequest().authenticated()
                 )
 

@@ -4,7 +4,6 @@ import com.ddooby.gachiillgi.domain.entity.User;
 import com.ddooby.gachiillgi.interfaces.dto.response.AuthorityResponseDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.validation.constraints.Email;
@@ -26,7 +25,7 @@ public class UserRegisterRequestDTO {
     @Size(min = 3, max = 50)
     private String email;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    //    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotNull
     @Size(min = 3, max = 100)
     private String password;
