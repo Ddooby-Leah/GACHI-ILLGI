@@ -13,6 +13,7 @@ public enum AuthErrorCodeEnum implements ErrorCodeEnum {
     UNAUTHORIZED_ACCESS("Unauthorized access to the requested resource", "Unauthorized access"),
     ACCESS_DENIED("Access to the requested resource is denied", "Access denied"),
     MUST_MAIL_VERIFICATION("메일인증을 수행해 주세요.", "메일인증"),
+    MAIL_SEND_ERROR("메일 전송 실패", "메일인증"),
     INVALID_MAIL_LINK("유효하지 않은 인증메일 링크입니다.", "메일인증"),
     EXPIRED_MAIL_LINK("메일인증기한이 지났습니다. 메일인증 링크를 재발급 해주세요.", "메일인증"),
     ALREADY_COMPLETE_VERIFICATION("이미 메일인증에 완료되셨습니다.", "메일인증"),

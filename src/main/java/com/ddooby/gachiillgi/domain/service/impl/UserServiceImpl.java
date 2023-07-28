@@ -15,6 +15,7 @@ import com.ddooby.gachiillgi.domain.service.UserService;
 import com.ddooby.gachiillgi.interfaces.dto.request.UserDetailInfoRegisterRequestDTO;
 import com.ddooby.gachiillgi.interfaces.dto.request.UserRegisterRequestDTO;
 import com.ddooby.gachiillgi.interfaces.dto.response.UserRegisterResponseDTO;
+import com.ddooby.gachiillgi.interfaces.dto.response.UserUpdateResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,7 +39,6 @@ public class UserServiceImpl implements UserService {
                 .orElse(null);
 
         if (Objects.nonNull(findUser)) {
-
             if (findUser.isNotOAuthUser()) {
                 throw new BizException(UserErrorCodeEnum.DUPLICATE_EMAIL);
             } else {
@@ -70,10 +70,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private boolean isExistsUser(UserRegisterRequestDTO userRegisterRequestDto) {
-        return userRepository.findByEmail(userRegisterRequestDto.getEmail()).isPresent();
-    }
-
     @Override
     public UserRegisterResponseDTO signupWithDetail(UserDetailInfoRegisterRequestDTO requestDTO) {
         User tempUserInfo = userRepository.findByEmail(requestDTO.getEmail())
@@ -91,7 +87,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateActivated(String email) {
+    public UserUpdateResponseDTO updateActivated(String email) {
         User user = userRepository.findOneWithUserAuthorityByEmail(email)
                 .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND));
 
@@ -99,11 +95,13 @@ public class UserServiceImpl implements UserService {
             throw new BizException(AuthErrorCodeEnum.ALREADY_COMPLETE_VERIFICATION);
         } else {
             user.setActivated(UserStatusEnum.ACTIVATED);
+            return UserUpdateResponseDTO.from(user);
         }
     }
 
     @Override
     public UserRegisterResponseDTO getUserWithAuthorities(String email) {
+        //todo null말고 예외처리하까..?
         return UserRegisterResponseDTO.from(userRepository.findOneWithUserAuthorityByEmail(email).orElse(null));
     }
 

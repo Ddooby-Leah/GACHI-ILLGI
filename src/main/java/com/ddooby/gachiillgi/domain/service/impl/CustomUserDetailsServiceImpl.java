@@ -2,6 +2,7 @@ package com.ddooby.gachiillgi.domain.service.impl;
 
 import com.ddooby.gachiillgi.base.enums.UserStatusEnum;
 import com.ddooby.gachiillgi.base.enums.exception.AuthErrorCodeEnum;
+import com.ddooby.gachiillgi.base.enums.exception.UserErrorCodeEnum;
 import com.ddooby.gachiillgi.base.exception.BizException;
 import com.ddooby.gachiillgi.domain.entity.User;
 import com.ddooby.gachiillgi.domain.repository.UserRepository;
@@ -11,7 +12,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +30,7 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(final String email) {
         return userRepository.findOneWithUserAuthorityByEmail(email)
                 .map(this::createUser)
-                .orElseThrow(() -> new UsernameNotFoundException(email + " -> 데이터베이스에서 해당 이메일을 찾을 수 없습니다."));
+                .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND));
     }
 
     private org.springframework.security.core.userdetails.User createUser(User user) {

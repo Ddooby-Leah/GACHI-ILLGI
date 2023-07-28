@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -23,7 +21,7 @@ import static com.ddooby.gachiillgi.base.enums.TokenEnum.TOKEN_COOKIE_HEADER;
 @Slf4j
 public class CommonUtil {
 
-    private static ObjectMapper objectMapper = new ObjectMapper()
+    private static final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
@@ -59,7 +57,7 @@ public class CommonUtil {
                 HttpHeaders.SET_COOKIE,
                 ResponseCookie.from(TOKEN_COOKIE_HEADER.getName(), token)
                         .maxAge(maxAge)
-                        .secure(true)
+                        .secure(false) //todo 추후변경
 //                        .httpOnly(true)
                         .path("/")
                         .build()
@@ -71,7 +69,7 @@ public class CommonUtil {
     public static void addAuthCookie(String token, int maxAge, HttpServletResponse httpServletResponse) {
         Cookie authCookie = new Cookie(TOKEN_COOKIE_HEADER.getName(), token);
         authCookie.setMaxAge(maxAge);
-        authCookie.setSecure(true);
+        authCookie.setSecure(false); //todo 추후변경
         authCookie.setPath("/");
         authCookie.setHttpOnly(false);
         httpServletResponse.addCookie(authCookie);

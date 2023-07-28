@@ -2,42 +2,47 @@ package com.ddooby.gachiillgi.domain.service.impl;
 
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.model.*;
+import com.ddooby.gachiillgi.base.enums.exception.UserErrorCodeEnum;
+import com.ddooby.gachiillgi.base.exception.BizException;
+import com.ddooby.gachiillgi.domain.entity.User;
+import com.ddooby.gachiillgi.domain.repository.UserRepository;
 import com.ddooby.gachiillgi.domain.service.MailService;
+import com.ddooby.gachiillgi.interfaces.dto.response.MailServiceResponseDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class AmazonSESMailServiceImpl implements MailService {
+    @Value("${aws.ses.from}")
+    private String from;
+    private final UserRepository userRepository;
+    private final TemplateEngine htmlTemplateEngine;
     private final AmazonSimpleEmailService amazonSimpleEmailService;
 
-    private final TemplateEngine htmlTemplateEngine;
-
-    private final String from;
-
-    public AmazonSESMailServiceImpl(
-            AmazonSimpleEmailService amazonSimpleEmailService,
-            TemplateEngine htmlTemplateEngine,
-            @Value("${aws.ses.from}") String from
-    ) {
-        this.amazonSimpleEmailService = amazonSimpleEmailService;
-        this.htmlTemplateEngine = htmlTemplateEngine;
-        this.from = from;
-    }
-
     @Override
-    public void send(String subject, Map<String, Object> variables, String... to) {
-        //todo
-        //pending 상태인 사용자 인지 아닌지 확인하는 검증 로직 필요
+    public MailServiceResponseDTO send(String subject, Map<String, Object> variables, String to) {
+
+        User user = userRepository.findByEmail(to)
+                .orElseThrow(() -> new BizException(UserErrorCodeEnum.USER_NOT_FOUND));
+
+        if (user.isActivatedUser()) {
+            throw new BizException(UserErrorCodeEnum.USER_NOT_PENDING_STATUS);
+        }
+
         String content = htmlTemplateEngine.process("index", createContext(variables));
         SendEmailRequest sendEmailRequest = createSendEmailRequest(subject, content, to);
+        SendEmailResult sendEmailResult = amazonSimpleEmailService.sendEmail(sendEmailRequest);
 
-        amazonSimpleEmailService.sendEmail(sendEmailRequest);
+        return MailServiceResponseDTO.builder()
+                .messageId(sendEmailResult.getMessageId())
+                .build();
     }
 
     private Context createContext(Map<String, Object> variables) {

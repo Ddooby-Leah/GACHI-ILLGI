@@ -9,12 +9,15 @@ public enum UserErrorCodeEnum implements ErrorCodeEnum {
     DUPLICATE_EMAIL("Duplicate email", "Email already exists"),
     DUPLICATE_NICKNAME("Duplicate nickname", "Nickname already exists"),
     INVALID_PASSWORD("Invalid password", "Invalid password"),
-    INVALID_EMAIL_FORMAT("Invalid email format", "Invalid email format"),;
+    INVALID_EMAIL_FORMAT("Invalid email format", "Invalid email format"),
+
+    USER_NOT_PENDING_STATUS("유저는 인증대기 상태가 아닙니다.", "User Error"),
+    ;
 
     private final String longMessage;
     private final String shortMessage;
 
-    public static UserErrorCodeEnum findByType (String type) {
+    public static UserErrorCodeEnum findByType(String type) {
         try {
             return UserErrorCodeEnum.valueOf(type);
         } catch (IllegalArgumentException illegalArgumentException) {
@@ -23,7 +26,9 @@ public enum UserErrorCodeEnum implements ErrorCodeEnum {
     }
 
     @Override
-    public String getLongMessage() { return longMessage; }
+    public String getLongMessage() {
+        return longMessage;
+    }
 
     @Override
     public String getShortMessage() {

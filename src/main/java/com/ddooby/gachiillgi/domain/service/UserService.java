@@ -3,6 +3,7 @@ package com.ddooby.gachiillgi.domain.service;
 import com.ddooby.gachiillgi.interfaces.dto.request.UserDetailInfoRegisterRequestDTO;
 import com.ddooby.gachiillgi.interfaces.dto.request.UserRegisterRequestDTO;
 import com.ddooby.gachiillgi.interfaces.dto.response.UserRegisterResponseDTO;
+import com.ddooby.gachiillgi.interfaces.dto.response.UserUpdateResponseDTO;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface UserService {
@@ -14,7 +15,7 @@ public interface UserService {
     UserRegisterResponseDTO signupWithDetail(UserDetailInfoRegisterRequestDTO requestDTO);
 
     @Transactional
-    void updateActivated(String email);
+    UserUpdateResponseDTO updateActivated(String email);
 
     @Transactional(readOnly = true)
     UserRegisterResponseDTO getUserWithAuthorities(String email);

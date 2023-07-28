@@ -15,8 +15,7 @@ import java.util.stream.Collectors;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRegisterResponseDTO {
-
+public class UserUpdateResponseDTO {
     private String email;
 
     private String password;
@@ -39,10 +38,10 @@ public class UserRegisterResponseDTO {
 
     private Set<AuthorityResponseDTO> authorityResponseDtoSet;
 
-    public static UserRegisterResponseDTO from(User user) {
+    public static UserUpdateResponseDTO from(User user) {
         if (user == null) return null;
 
-        return UserRegisterResponseDTO.builder()
+        return UserUpdateResponseDTO.builder()
                 .email(user.getEmail())
                 .nickname(user.getNickname())
                 .sex(user.getSex())
@@ -58,5 +57,5 @@ public class UserRegisterResponseDTO {
                 .createAt(user.getCreatedAt())
                 .build();
     }
-}
 
+}

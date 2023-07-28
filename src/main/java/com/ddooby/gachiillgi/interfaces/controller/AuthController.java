@@ -12,13 +12,12 @@ import com.ddooby.gachiillgi.interfaces.dto.request.MailSendRequestDTO;
 import com.ddooby.gachiillgi.interfaces.dto.request.UserDetailInfoRegisterRequestDTO;
 import com.ddooby.gachiillgi.interfaces.dto.request.UserRegisterRequestDTO;
 import com.ddooby.gachiillgi.interfaces.dto.response.KakaoProfileResponseDTO;
-import com.ddooby.gachiillgi.interfaces.dto.response.TokenResponseDTO;
+import com.ddooby.gachiillgi.interfaces.dto.response.MailServiceResponseDTO;
 import com.ddooby.gachiillgi.interfaces.dto.response.UserRegisterResponseDTO;
+import com.ddooby.gachiillgi.interfaces.dto.response.UserUpdateResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -76,7 +75,7 @@ public class AuthController {
 
     @PostMapping("/send-mail")
 
-    public String sendVerificationMail(@RequestBody MailSendRequestDTO mailSendRequestDTO, HttpServletRequest request) { // FIXME 코드 너무 더럽;
+    public MailServiceResponseDTO sendVerificationMail(@RequestBody MailSendRequestDTO mailSendRequestDTO, HttpServletRequest request) { // FIXME 코드 너무 더럽;
 
         String email = mailSendRequestDTO.getEmail();
         String username = mailSendRequestDTO.getNickname();
@@ -90,18 +89,17 @@ public class AuthController {
         variables.put("nickname", mailSendRequestDTO.getNickname() + "님 환영합니다!");
         variables.put("link", "http://localhost:8080/api/auth/verify-mail/?link=" + temporaryLink);
         variables.put("location", "https://가치일기.com");
-        mailService.send(subject, variables, mailSendRequestDTO.getEmail());
-
         log.debug(request.toString());
 
-        return "인증 메일 전송 완료";
+        return mailService.send(subject, variables, mailSendRequestDTO.getEmail());
     }
 
     @GetMapping("/verify-mail")
-    public RedirectView verifyVerificationMail(@RequestParam String link) { // FIXME 어떻게 정리할까..?
+    public RedirectView verifyVerificationMail(@RequestParam String link) {
         String email = tokenProvider.verifyTemporaryLink(link);
         if (email != null) {
-            userService.updateActivated(email);
+            UserUpdateResponseDTO responseDTO = userService.updateActivated(email);
+            //todo responsedto 활용
             return new RedirectView("http://localhost:3000");
         } else {
             return new RedirectView("/error");
@@ -109,8 +107,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public RedirectView authorize(@Valid @RequestBody LoginRequestDTO loginRequestDto,
-                                                      HttpServletResponse httpServletResponse) {
+    public LoginResponseDTO authorize(@Valid @RequestBody LoginRequestDTO loginRequestDto,
+                                      HttpServletResponse httpServletResponse) {
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword());
@@ -121,7 +119,10 @@ public class AuthController {
         String token = tokenProvider.createToken(authentication);
         CommonUtil.addAuthCookie(token, Integer.parseInt(tokenExpireTime), httpServletResponse);
 
-        return new RedirectView("http://localhost:3000");
+        return LoginResponseDTO.builder()
+                .token(token)
+                .tokenExpireTime(Long.parseLong(tokenExpireTime))
+                .build();
     }
 
     @GetMapping(value = "/kakao-login")
