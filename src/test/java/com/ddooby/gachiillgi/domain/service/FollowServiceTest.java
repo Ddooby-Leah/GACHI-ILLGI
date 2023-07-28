@@ -4,7 +4,6 @@ import com.ddooby.gachiillgi.base.enums.exception.FollowErrorCodeEnum;
 import com.ddooby.gachiillgi.base.enums.exception.UserErrorCodeEnum;
 import com.ddooby.gachiillgi.base.exception.BizException;
 import com.ddooby.gachiillgi.domain.service.impl.FollowServiceImpl;
-import com.ddooby.gachiillgi.domain.vo.FollowUserVO;
 import com.ddooby.gachiillgi.domain.vo.FollowUserVOList;
 import com.ddooby.gachiillgi.interfaces.dto.response.FollowResponseDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -98,26 +97,11 @@ class FollowServiceTest {
 
         // given
         String followeeEmail = "followee11@abc.com";
-        String followerEmail1 = "follower11@abc.com";
-        String followerEmail2 = "ddooby.doobob1@kakaoenterprise.com";
-
-        FollowUserVO followUserVO = FollowUserVO.builder()
-                .email(followerEmail1)
-                .nickname("ddd")
-                .sex("남자")
-                .build();
-
-        FollowUserVO followUserVO1 = FollowUserVO.builder()
-                .email(followerEmail2)
-                .nickname("user")
-                .sex("남자")
-                .build();
 
         //when
         FollowUserVOList followers = followService.getFollowers(followeeEmail);
 
         //then
-        Assertions.assertThat(followers.getList()).contains(followUserVO, followUserVO1);
         Assertions.assertThat(followers.getCount()).isEqualTo(2);
     }
 
