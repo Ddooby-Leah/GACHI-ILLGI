@@ -118,7 +118,7 @@ public class AuthController {
     }
 
     @GetMapping(value = "/kakao-login")
-    public RedirectView loginByKakao(@RequestParam("code") String authorizationCode,
+    public RedirectView loginByKakao(@RequestParam(value = "code", required = false) String authorizationCode,
                                      @RequestParam(value = "error", required = false) String errorCode,
                                      @RequestParam(value = "error_description", required = false) String errorDescription,
                                      HttpServletResponse httpServletResponse) {

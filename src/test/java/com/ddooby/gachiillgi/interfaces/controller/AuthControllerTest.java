@@ -260,4 +260,16 @@ class AuthControllerTest {
                 .andExpect(header().string("location", "http://localhost:3000"))
                 .andExpect(cookie().exists("accessToken"));
     }
+
+    @Test
+    public void 카카오_에서_에러코드를_파라미터로_넘겨주면_예외가_발생한다() throws Exception {
+
+        //given
+        //when then
+        mockMvc.perform(get("/api/auth/kakao-login")
+                        .param("error", "error"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("-1"))
+                .andExpect(jsonPath("$.longMessage").value("카카오 인증 과정 중 취소처리 되었습니다."));
+    }
 }
