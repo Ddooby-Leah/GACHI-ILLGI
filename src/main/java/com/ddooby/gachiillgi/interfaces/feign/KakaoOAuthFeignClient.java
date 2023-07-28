@@ -19,6 +19,6 @@ public interface KakaoOAuthFeignClient {
     KakaoProfileResponseDTO getUserInfo(URI requestUri, @RequestHeader("Authorization") String accessToken);
 
     @PostMapping(value = "kapi.kakao.com")
-        // TODO 추후 구현
+        // todo 추후 구현
     String logout(URI requestUri, @RequestParam("target_id") String loginId);
 }

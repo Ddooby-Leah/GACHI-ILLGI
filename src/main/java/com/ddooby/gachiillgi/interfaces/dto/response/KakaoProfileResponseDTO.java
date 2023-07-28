@@ -3,11 +3,13 @@ package com.ddooby.gachiillgi.interfaces.dto.response;
 import com.ddooby.gachiillgi.interfaces.dto.request.UserRegisterRequestDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
 @Getter
 @ToString
+@Builder
 @AllArgsConstructor
 public class KakaoProfileResponseDTO {
 

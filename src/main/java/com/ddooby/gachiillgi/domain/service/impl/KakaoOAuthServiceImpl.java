@@ -28,7 +28,7 @@ public class KakaoOAuthServiceImpl implements OAuthService {
         if (Objects.isNull(responseDTO)) {
             throw new BizException(AuthErrorCodeEnum.KAKAO_AUTH_GET_TOKEN_ERROR);
         } else {
-            log.debug("## KakaoOAuthResponseDTO : {}", responseDTO.toString());
+            log.debug("## KakaoOAuthResponseDTO : {}", responseDTO);
             return responseDTO.getAccessToken();
         }
     }
