@@ -68,10 +68,12 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
                 }
             }
             return DefaultErrorResponseDTO.error(errorCode, errorLongMessage, errorShortMessage);
+
         } else if (isLoginException) {
             errorShortMessage = e.getMessage();
             errorLongMessage = e.getMessage();
             return DefaultErrorResponseDTO.error(errorLongMessage, errorShortMessage);
+
         } else {
             errorLongMessage = e.getMessage();
             errorShortMessage = "system error";
